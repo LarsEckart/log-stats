@@ -6,16 +6,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 public class LogFileLineParser implements Function<String, RequestInfo> {
 
-    private static final String WHITESPACE = "\\s";
-    private static final Pattern SPLIT_ARGUMENT = Pattern.compile(WHITESPACE);
+    private static final String LINE_ITEM_SPLIT_ARGUMENT = " ";
 
     @Override
     public RequestInfo apply(String text) {
-        final String[] lineItems = text.split(SPLIT_ARGUMENT.pattern());
+        final String[] lineItems = text.split(LINE_ITEM_SPLIT_ARGUMENT);
 
         final RequestInfo.Builder builder = new RequestInfo.Builder();
 
