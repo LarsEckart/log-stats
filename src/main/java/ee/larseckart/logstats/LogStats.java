@@ -9,15 +9,35 @@ public class LogStats {
     }
 
     public void start(String[] args) {
-        if (args.length == 0) {
-            this.console.printLine("No args provided, run with -h flag for help.");
+        if (hasNoArguments(args)) {
+            printInfoMessage();
         } else {
-            if (args.length == 1) {
-                if ("-h".equals(args[0])) {
-                    this.console.printLine("First argument must be String s where s is the name of the log file.\n"
-                            + "Second argument must be a number n where n denotes how many resources to print out.");
+            if (hasOneArgument(args)) {
+                if (isHelpFlag(args[0])) {
+                    printHelpMessage();
                 }
             }
         }
+    }
+
+    private boolean isHelpFlag(String arg) {
+        return "-h".equals(arg);
+    }
+
+    private boolean hasOneArgument(String[] args) {
+        return args.length == 1;
+    }
+
+    private boolean hasNoArguments(String[] args) {
+        return args.length == 0;
+    }
+
+    private void printInfoMessage() {
+        this.console.printLine("No args provided, run with -h flag for help.");
+    }
+
+    private void printHelpMessage() {
+        this.console.printLine("First argument must be String s where s is the name of the log file.\n"
+                + "Second argument must be a number n where n denotes how many resources to print out.");
     }
 }
