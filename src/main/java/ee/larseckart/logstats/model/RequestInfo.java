@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestInfo {
+public class RequestInfo implements TimedResource {
 
     private final LocalDate date;
     private final LocalTime timestamp;
@@ -41,6 +41,7 @@ public class RequestInfo {
         return this.userContext;
     }
 
+    @Override
     public String getResource() {
         return this.resource;
     }
@@ -49,6 +50,7 @@ public class RequestInfo {
         return this.payloadElements;
     }
 
+    @Override
     public long getDuration() {
         return this.duration;
     }

@@ -1,6 +1,7 @@
 package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.model.RequestInfo;
+import ee.larseckart.logstats.model.TimedResource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class LogStatsTest {
     private LogFileParser logFileParser;
 
     @Mock
-    private BiConsumer<Integer, List<RequestInfo>> consumer;
+    private BiConsumer<Integer, List<TimedResource>> consumer;
 
     private LogStats logStats;
 
@@ -151,7 +152,7 @@ public class LogStatsTest {
         args[0] = ANY_FILE_NAME;
         args[1] = ANY_NUMBER;
 
-        final ArrayList<RequestInfo> requestInfos = new ArrayList<>();
+        final ArrayList<TimedResource> requestInfos = new ArrayList<>();
         given(this.logFileParser.parse(ANY_FILE_NAME)).willReturn(requestInfos);
 
         // when

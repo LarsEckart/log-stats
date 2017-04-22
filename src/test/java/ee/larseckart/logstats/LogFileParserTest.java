@@ -1,6 +1,7 @@
 package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.model.RequestInfo;
+import ee.larseckart.logstats.model.TimedResource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class LogFileParserTest {
         String example = "anyLine";
 
         // when
-        final List<RequestInfo> requestInfos = this.parser.parse(example);
+        final List<TimedResource> requestInfos = this.parser.parse(example);
 
         // then
         assertThat(requestInfos).hasSize(1);
@@ -35,7 +36,7 @@ public class LogFileParserTest {
         String example = "line1\nline2\nline3\n";
 
         // when
-        final List<RequestInfo> requestInfos = this.parser.parse(example);
+        final List<TimedResource> requestInfos = this.parser.parse(example);
 
         // then
         assertThat(requestInfos).hasSize(3);

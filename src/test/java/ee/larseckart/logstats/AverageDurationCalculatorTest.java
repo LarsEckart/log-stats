@@ -1,5 +1,6 @@
 package ee.larseckart.logstats;
 
+import ee.larseckart.logstats.model.RequestInfo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,8 +14,9 @@ public class AverageDurationCalculatorTest {
     }
 
     @Test
-    public void foo() throws Exception {
+    public void should_print_n_resources_who_have_highest_avg_duration() throws Exception {
         // given
+
 
         // when
 

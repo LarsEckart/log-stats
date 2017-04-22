@@ -1,6 +1,7 @@
 package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.model.RequestInfo;
+import ee.larseckart.logstats.model.TimedResource;
 
 import java.util.List;
 import java.util.function.Function;
@@ -15,7 +16,7 @@ public class LogFileParser {
         this.lineParser = lineParser;
     }
 
-    public List<RequestInfo> parse(String fileContent) {
+    public List<TimedResource> parse(String fileContent) {
         return Pattern.compile("\n")
                       .splitAsStream(fileContent)
                       .map(line -> this.lineParser.apply(line))
