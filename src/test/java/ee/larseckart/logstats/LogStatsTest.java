@@ -34,4 +34,18 @@ public class LogStatsTest {
         // then
         verify(this.console).printLine("No args provided, run with -h flag for help.");
     }
+    
+    @Test
+    public void should_print_how_to_use_the_application_when_args_with_help_flag() throws Exception {
+        // given
+        final String[] args = new String[1];
+        args[0] = "-h";
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.console).printLine("First argument must be String s where s is the name of the log file.\n"
+                + "Second argument must be a number n where n denotes how many resources to print out.");
+    }
 }
