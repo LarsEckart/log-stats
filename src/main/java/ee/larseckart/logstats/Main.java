@@ -5,6 +5,7 @@ import ee.larseckart.logstats.input.LogFileLineParser;
 import ee.larseckart.logstats.input.LogFileReader;
 import ee.larseckart.logstats.model.TimedResource;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -19,6 +20,8 @@ public class Main {
         final Console console = new Console();
         final BiConsumer<Integer, List<TimedResource>> consumer = new AverageDurationCalculator(console);
 
-        new LogStats(console, provider, consumer).start(args);
+        final Clock clock = Clock.systemDefaultZone();
+
+        new LogStats(clock, console, provider, consumer).execute(args);
     }
 }

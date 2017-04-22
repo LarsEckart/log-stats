@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.time.Clock;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -35,11 +36,14 @@ public class LogStatsTest {
     @Mock
     private BiConsumer<Integer, List<TimedResource>> consumer;
 
+    @Mock
+    private Clock clock;
+
     private LogStats logStats;
 
     @Before
     public void initialize() throws Exception {
-        this.logStats = new LogStats(this.console, this.provider, this.consumer);
+        this.logStats = new LogStats(this.clock, this.console, this.provider, this.consumer);
     }
 
     @Test
@@ -48,7 +52,7 @@ public class LogStatsTest {
         final String[] emptyArgs = new String[0];
 
         // when
-        this.logStats.start(emptyArgs);
+        this.logStats.execute(emptyArgs);
 
         // then
         verify(this.console).printLine("No args provided, run with -h flag for help.");
@@ -61,7 +65,7 @@ public class LogStatsTest {
         args[0] = "-h";
 
         // when
-        this.logStats.start(args);
+        this.logStats.execute(args);
 
         // then
         verify(this.console).printLine("Provide 2 arguments.");
@@ -77,7 +81,7 @@ public class LogStatsTest {
         args[0] = ANY_ARGS;
 
         // when
-        this.logStats.start(args);
+        this.logStats.execute(args);
 
         // then
         verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
@@ -92,7 +96,7 @@ public class LogStatsTest {
         args[2] = ANY_ARGS;
 
         // when
-        this.logStats.start(args);
+        this.logStats.execute(args);
 
         // then
         verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
@@ -106,7 +110,7 @@ public class LogStatsTest {
         args[1] = NOT_A_NUMBER;
 
         // when
-        this.logStats.start(args);
+        this.logStats.execute(args);
 
         // then
         verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
@@ -120,7 +124,7 @@ public class LogStatsTest {
         args[1] = ANY_NUMBER;
 
         // when
-        this.logStats.start(args);
+        this.logStats.execute(args);
 
         // then
         verify(this.provider).apply(ANY_FILE_NAME);
@@ -139,7 +143,7 @@ public class LogStatsTest {
         given(this.provider.apply(ANY_FILE_NAME)).willReturn(timedResources);
 
         // when
-        this.logStats.start(args);
+        this.logStats.execute(args);
 
         // then
         verify(this.consumer).accept(Integer.parseInt(ANY_NUMBER), timedResources);
@@ -155,9 +159,25 @@ public class LogStatsTest {
         given(this.provider.apply(ANY_FILE_NAME)).willThrow(new IllegalArgumentException("any_message"));
 
         // when
-        this.logStats.start(args);
+        this.logStats.execute(args);
 
         // then
         verify(this.console).printLine("any_message");
+    }
+
+    @Test
+    public void should_print_execution_time() throws Exception {
+        // given
+        final String[] anyArgs = new String[2];
+        anyArgs[0] = ANY_FILE_NAME;
+        anyArgs[1] = ANY_NUMBER;
+
+        given(this.clock.millis()).willReturn(50L, 75L);
+
+        // when
+        this.logStats.execute(anyArgs);
+
+        // then
+        verify(this.console).printLine("Execution took 25 milliseconds.");
     }
 }

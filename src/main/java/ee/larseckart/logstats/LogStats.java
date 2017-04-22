@@ -2,31 +2,37 @@ package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.model.TimedResource;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class LogStats {
 
+    private final Clock clock;
     private final Console console;
     private final Function<String, List<TimedResource>> provider;
     private final BiConsumer<Integer, List<TimedResource>> consumer;
 
     public LogStats(
-            Console console,
+            Clock clock, Console console,
             Function<String, List<TimedResource>> provider, BiConsumer<Integer, List<TimedResource>> consumer)
     {
+        this.clock = clock;
         this.console = console;
         this.provider = provider;
         this.consumer = consumer;
     }
 
-    public void start(String[] args) {
+    public void execute(String[] args) {
+        final long start = this.clock.millis();
         if (hasNoArguments(args)) {
             printInfoMessage();
         } else {
             processArguments(args);
         }
+        final long duration = this.clock.millis() - start;
+        this.console.printLine("Execution took " + duration + " milliseconds.");
     }
 
     private boolean hasNoArguments(String[] args) {
