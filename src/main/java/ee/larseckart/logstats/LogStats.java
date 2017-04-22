@@ -18,10 +18,20 @@ public class LogStats {
                 } else {
                     printUnknownArgumentsMessage();
                 }
+            } else if (hasTwoArguments(args)) {
+                try {
+                    int topN = Integer.parseInt(args[1]);
+                } catch (NumberFormatException exception) {
+                    printUnknownArgumentsMessage();
+                }
             } else if (hasTooManyArguments(args)) {
                 printUnknownArgumentsMessage();
             }
         }
+    }
+
+    private boolean hasTwoArguments(String[] args) {
+        return args.length == 2;
     }
 
     private boolean isHelpFlag(String arg) {

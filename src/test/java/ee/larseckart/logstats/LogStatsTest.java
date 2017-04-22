@@ -77,4 +77,18 @@ public class LogStatsTest {
         // then
         verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
     }
+
+    @Test
+    public void should_print_how_to_use_the_application_when_2_args_but_second_arg_is_no_number() throws Exception {
+        // given
+        final String[] args = new String[2];
+        args[0] = "anyArgs";
+        args[1] = "NaN";
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
+    }
 }
