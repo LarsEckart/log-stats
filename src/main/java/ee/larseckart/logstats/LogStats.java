@@ -9,6 +9,8 @@ public class LogStats {
     }
 
     public void start(String[] args) {
-
+        if (args.length == 0) {
+            this.console.printLine("No args provided, run with -h flag for help.");
+        }
     }
 }
