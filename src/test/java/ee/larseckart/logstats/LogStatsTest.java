@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -153,7 +154,8 @@ public class LogStatsTest {
         args[1] = ANY_NUMBER;
 
         final ArrayList<TimedResource> requestInfos = new ArrayList<>();
-        given(this.logFileParser.parse(ANY_FILE_NAME)).willReturn(requestInfos);
+        given(this.logFileParser.parse(anyString())).willReturn(requestInfos);
+        //TODO figure out why mockito says its unused.
 
         // when
         this.logStats.start(args);

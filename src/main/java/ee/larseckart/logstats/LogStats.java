@@ -1,6 +1,5 @@
 package ee.larseckart.logstats;
 
-import ee.larseckart.logstats.model.RequestInfo;
 import ee.larseckart.logstats.model.TimedResource;
 
 import java.util.List;
@@ -10,13 +9,13 @@ public class LogStats {
 
     private final Console console;
     private final LogFileReader logFileReader;
-    private final LogFileParser parser;
+    private final LogFileParser logFileParser;
     private final BiConsumer<Integer, List<TimedResource>> consumer;
 
-    public LogStats(Console console, LogFileReader logFileReader, LogFileParser parser, BiConsumer<Integer, List<TimedResource>> consumer) {
+    public LogStats(Console console, LogFileReader logFileReader, LogFileParser logFileParser, BiConsumer<Integer, List<TimedResource>> consumer) {
         this.console = console;
         this.logFileReader = logFileReader;
-        this.parser = parser;
+        this.logFileParser = logFileParser;
         this.consumer = consumer;
     }
 
@@ -34,7 +33,7 @@ public class LogStats {
                 try {
                     int topN = Integer.parseInt(args[1]);
                     final String fileContent = this.logFileReader.read(args[0]);
-                    final List<TimedResource> requestInfos = this.parser.parse(fileContent);
+                    final List<TimedResource> requestInfos = this.logFileParser.parse(fileContent);
                     this.consumer.accept(topN, requestInfos);
                 } catch (NumberFormatException exception) {
                     printUnknownArgumentsMessage();

@@ -26,7 +26,7 @@ public class AverageDurationCalculatorTest {
 
     @Before
     public void initialize() throws Exception {
-        this.averageDurationCalculator = new AverageDurationCalculator();
+        this.averageDurationCalculator = new AverageDurationCalculator(console);
     }
 
     @Test
@@ -43,8 +43,8 @@ public class AverageDurationCalculatorTest {
         this.averageDurationCalculator.accept(2, timedResources);
 
         // then
-        verify(this.console).printLine("B: 10");
-        verify(this.console).printLine("C: 6");
+        verify(this.console).printLine("B: 10.0");
+        verify(this.console).printLine("C: 6.0");
     }
 
     class AnyTimedResource implements TimedResource {
