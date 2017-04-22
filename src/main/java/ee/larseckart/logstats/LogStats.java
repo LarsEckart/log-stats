@@ -37,7 +37,8 @@ public class LogStats {
     }
 
     private void printHelpMessage() {
-        this.console.printLine("First argument must be String s where s is the name of the log file.\n"
+        this.console.printLine("Provide 2 arguments.\n"
+                + "First argument must be String s where s is the name of the log file.\n"
                 + "Second argument must be a number n where n denotes how many resources to print out.");
     }
 }

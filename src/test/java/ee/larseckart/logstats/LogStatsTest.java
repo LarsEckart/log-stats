@@ -45,7 +45,21 @@ public class LogStatsTest {
         this.logStats.start(args);
 
         // then
-        verify(this.console).printLine("First argument must be String s where s is the name of the log file.\n"
+        verify(this.console).printLine("Provide 2 arguments.\n"
+                + "First argument must be String s where s is the name of the log file.\n"
                 + "Second argument must be a number n where n denotes how many resources to print out.");
+    }
+
+    @Test
+    public void should_print_how_to_use_the_application_when_args_but_not_help_flag() throws Exception {
+        // given
+        final String[] args = new String[1];
+        args[0] = "anyArgs";
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.console).printLine("Unknown argument, run with -h flag for help.");
     }
 }
