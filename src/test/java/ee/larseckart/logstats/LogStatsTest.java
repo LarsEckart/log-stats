@@ -1,6 +1,5 @@
 package ee.larseckart.logstats;
 
-import ee.larseckart.logstats.model.RequestInfo;
 import ee.larseckart.logstats.model.TimedResource;
 import org.junit.Before;
 import org.junit.Rule;
@@ -9,11 +8,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -21,7 +19,8 @@ public class LogStatsTest {
 
     private static final String ANY_ARGS = "anyArgs";
     private static final String ANY_FILE_NAME = "any_file_name";
-    private static final String ANY_FILE_CONTENT = "any_file_content";
+    private static final String ANY_FILE_CONTENT1 = "any_file_content";
+    private static final String ANY_FILE_CONTENT = ANY_FILE_CONTENT1;
     private static final String NOT_A_NUMBER = "NaN";
     private static final String ANY_NUMBER = "3";
 
@@ -153,9 +152,11 @@ public class LogStatsTest {
         args[0] = ANY_FILE_NAME;
         args[1] = ANY_NUMBER;
 
-        final ArrayList<TimedResource> requestInfos = new ArrayList<>();
-        given(this.logFileParser.parse(anyString())).willReturn(requestInfos);
-        //TODO figure out why mockito says its unused.
+        final List<TimedResource> requestInfos =
+                Collections.singletonList(new AnyTimedResource("any", 42L));
+
+        given(this.logFileReader.read(ANY_FILE_NAME)).willReturn(ANY_FILE_CONTENT1);
+        given(this.logFileParser.parse(ANY_FILE_CONTENT1)).willReturn(requestInfos);
 
         // when
         this.logStats.start(args);

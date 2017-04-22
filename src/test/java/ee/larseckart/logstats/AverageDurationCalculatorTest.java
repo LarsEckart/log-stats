@@ -46,26 +46,4 @@ public class AverageDurationCalculatorTest {
         verify(this.console).printLine("B: 10.0");
         verify(this.console).printLine("C: 6.0");
     }
-
-    class AnyTimedResource implements TimedResource {
-
-        private final String resource;
-        private final long duration;
-
-        public AnyTimedResource(String resource, long duration) {
-
-            this.resource = resource;
-            this.duration = duration;
-        }
-
-        @Override
-        public String getResource() {
-            return this.resource;
-        }
-
-        @Override
-        public long getDuration() {
-            return this.duration;
-        }
-    }
 }
