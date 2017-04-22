@@ -2,7 +2,7 @@ package ee.larseckart.logstats;
 
 public class LogStats {
 
-    private Console console;
+    private final Console console;
 
     public LogStats(Console console) {
         this.console = console;
@@ -15,6 +15,8 @@ public class LogStats {
             if (hasOneArgument(args)) {
                 if (isHelpFlag(args[0])) {
                     printHelpMessage();
+                } else {
+                    printUnknownArgumentsMessage();
                 }
             }
         }
@@ -40,5 +42,9 @@ public class LogStats {
         this.console.printLine("Provide 2 arguments.\n"
                 + "First argument must be String s where s is the name of the log file.\n"
                 + "Second argument must be a number n where n denotes how many resources to print out.");
+    }
+
+    private void printUnknownArgumentsMessage() {
+        this.console.printLine("Unknown argument(s), run with -h flag for help.");
     }
 }
