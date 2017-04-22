@@ -13,7 +13,10 @@ public class LogStats {
             this.console.printLine("No args provided, run with -h flag for help.");
         } else {
             if (args.length == 1) {
-
+                if ("-h".equals(args[0])) {
+                    this.console.printLine("First argument must be String s where s is the name of the log file.\n"
+                            + "Second argument must be a number n where n denotes how many resources to print out.");
+                }
             }
         }
     }
