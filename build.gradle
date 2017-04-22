@@ -1,0 +1,47 @@
+plugins {
+    // allows 'gradle dependencyUpdates' to discover outdated dependencies
+    id 'com.github.ben-manes.versions' version '0.14.0'
+}
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = 'UTF-8'
+compileJava.options.compilerArgs << "-Xlint:all"
+javadoc.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:3.6.2'
+    testCompile 'org.mockito:mockito-core:2.7.22'
+}
+
+tasks.withType(JavaCompile) {
+    options.incremental = true
+}
+
+task 'create-dirs' << {
+    sourceSets.all { set ->
+        set.allSource.srcDirs.each { it.mkdirs() }
+    }
+}
+
+tasks.matching { it instanceof Test }.all {
+    testLogging.events = ["failed", "passed", "skipped"]
+}
+
+mainClassName = 'ee.larseckart.logstats.Main'
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ee.larseckart.logstats.Main'
+        )
+    }
+}
