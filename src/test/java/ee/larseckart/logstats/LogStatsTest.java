@@ -60,6 +60,21 @@ public class LogStatsTest {
         this.logStats.start(args);
 
         // then
-        verify(this.console).printLine("Unknown argument, run with -h flag for help.");
+        verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
+    }
+
+    @Test
+    public void should_print_how_to_use_the_application_when_more_than_2_args() throws Exception {
+        // given
+        final String[] args = new String[3];
+        args[0] = "anyArgs";
+        args[1] = "anyArgs";
+        args[2] = "anyArgs";
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
     }
 }
