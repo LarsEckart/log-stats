@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 public class LogStatsTest {
@@ -19,6 +20,9 @@ public class LogStatsTest {
 
     @Mock
     private LogFileReader logFileReader;
+
+    @Mock
+    private LogFileParser logFileParser;
 
     private LogStats logStats;
 
@@ -108,5 +112,21 @@ public class LogStatsTest {
 
         // then
         verify(this.logFileReader).read("anyFileName");
+    }
+
+    @Test
+    public void should_pass_file_content_to_log_file_parser() throws Exception {
+        // given
+        final String[] args = new String[2];
+        args[0] = "anyFileName";
+        args[1] = "3";
+
+        given(this.logFileReader.read("anyFileName")).willReturn("anyFileContent");
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.logFileParser).parse("anyFileContent");
     }
 }
