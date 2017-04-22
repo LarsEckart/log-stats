@@ -1,5 +1,6 @@
-package ee.larseckart.logstats;
+package ee.larseckart.logstats.input;
 
+import ee.larseckart.logstats.input.LogFileReader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

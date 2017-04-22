@@ -2,7 +2,7 @@ package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.model.TimedResource;
 
-class AnyTimedResource implements TimedResource {
+public class AnyTimedResource implements TimedResource {
 
     private final String resource;
     private final long duration;

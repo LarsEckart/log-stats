@@ -17,9 +17,9 @@ public class AverageDurationCalculator implements BiConsumer<Integer, List<Timed
     }
 
     @Override
-    public void accept(Integer topN, List<TimedResource> requestInfos) {
+    public void accept(Integer topN, List<TimedResource> timedResources) {
 
-        Map<String, DoubleSummaryStatistics> aggregated = aggregateData(requestInfos);
+        Map<String, DoubleSummaryStatistics> aggregated = aggregateData(timedResources);
 
         List<AggregationResult> averageDuration = calculateAverageAndSortAscending(aggregated);
 
@@ -28,45 +28,40 @@ public class AverageDurationCalculator implements BiConsumer<Integer, List<Timed
         }
     }
 
-    private Map<String, DoubleSummaryStatistics> aggregateData(List<TimedResource> requestInfos) {
-        return requestInfos.stream()
-                           .collect(
-                                   Collectors.groupingBy(
-                                           timedResource -> timedResource.getResource(),
-                                           Collectors.summarizingDouble(
-                                                   timedResource -> timedResource.getDuration())));
+    private Map<String, DoubleSummaryStatistics> aggregateData(List<TimedResource> timedResources) {
+        return timedResources.stream()
+                             .collect(
+                                     Collectors.groupingBy(
+                                             timedResource -> timedResource.getResource(),
+                                             Collectors.summarizingDouble(
+                                                     timedResource -> timedResource.getDuration())));
     }
 
     private List<AggregationResult> calculateAverageAndSortAscending(Map<String, DoubleSummaryStatistics> aggregated) {
         return aggregated.entrySet()
                          .stream()
-                         .map(entry -> AggregationResult.of(entry.getKey(), entry.getValue().getAverage()))
+                         .map(entry -> new AggregationResult(entry.getKey(), entry.getValue().getAverage()))
                          .sorted((s1, s2) -> s2.getValue().compareTo(s1.getValue()))
                          .collect(Collectors.toList());
     }
-}
 
-class AggregationResult {
+    class AggregationResult {
 
-    private final String name;
-    private final Double value;
+        private final String name;
+        private final Double value;
 
-    private AggregationResult(String name, Double value) {
-        this.name = name;
-        this.value = value;
-    }
+        private AggregationResult(String name, Double value) {
+            this.name = name;
+            this.value = value;
+        }
 
-    public static AggregationResult of(String name, Double value) {
-        return new AggregationResult(name, value);
-    }
+        public Double getValue() {
+            return this.value;
+        }
 
-    public Double getValue() {
-        return this.value;
-    }
-
-    @Override
-    public String toString() {
-        return this.name + ": " + this.value;
+        @Override
+        public String toString() {
+            return this.name + ": " + this.value;
+        }
     }
 }
-

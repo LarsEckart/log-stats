@@ -1,7 +1,17 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.10'
+    }
+}
+
 plugins {
     // allows 'gradle dependencyUpdates' to discover outdated dependencies
     id 'com.github.ben-manes.versions' version '0.14.0'
 }
+apply plugin: 'info.solidsoft.pitest'
 apply plugin: 'java'
 apply plugin: 'application'
 
@@ -44,4 +54,13 @@ jar {
                 'Main-Class': 'ee.larseckart.logstats.Main'
         )
     }
+}
+
+pitest {
+    targetClasses = ['ee.larseckart.*']
+    testSourceSets = [sourceSets.test,]
+    pitestVersion = "1.1.5"
+    threads = 4
+    outputFormats = ['HTML']
+    enableDefaultIncrementalAnalysis = true
 }

@@ -1,4 +1,4 @@
-package ee.larseckart.logstats;
+package ee.larseckart.logstats.input;
 
 import java.io.IOException;
 import java.nio.file.Files;

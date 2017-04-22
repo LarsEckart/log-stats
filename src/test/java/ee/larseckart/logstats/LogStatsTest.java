@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoRule;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -31,10 +32,7 @@ public class LogStatsTest {
     private Console console;
 
     @Mock
-    private LogFileReader logFileReader;
-
-    @Mock
-    private LogFileParser logFileParser;
+    private Function<String, List<TimedResource>> provider;
 
     @Mock
     private BiConsumer<Integer, List<TimedResource>> consumer;
@@ -43,7 +41,7 @@ public class LogStatsTest {
 
     @Before
     public void initialize() throws Exception {
-        this.logStats = new LogStats(this.logFileReader, this.logFileParser, this.console, this.consumer);
+        this.logStats = new LogStats(this.console, this.provider, this.consumer);
     }
 
     @Test
@@ -116,7 +114,7 @@ public class LogStatsTest {
     }
 
     @Test
-    public void should_pass_first_argument_to_logfile_reader_when_correct_arguments() throws Exception {
+    public void should_pass_first_argument_to_timed_resource_provider_when_correct_arguments() throws Exception {
         // given
         final String[] args = new String[2];
         args[0] = ANY_FILE_NAME;
@@ -126,23 +124,7 @@ public class LogStatsTest {
         this.logStats.start(args);
 
         // then
-        verify(this.logFileReader).read(ANY_FILE_NAME);
-    }
-
-    @Test
-    public void should_pass_file_content_to_log_file_parser() throws Exception {
-        // given
-        final String[] args = new String[2];
-        args[0] = ANY_FILE_NAME;
-        args[1] = ANY_NUMBER;
-
-        given(this.logFileReader.read(ANY_FILE_NAME)).willReturn(ANY_FILE_CONTENT);
-
-        // when
-        this.logStats.start(args);
-
-        // then
-        verify(this.logFileParser).parse(ANY_FILE_CONTENT);
+        verify(this.provider).apply(ANY_FILE_NAME);
     }
 
     @Test
@@ -152,16 +134,15 @@ public class LogStatsTest {
         args[0] = ANY_FILE_NAME;
         args[1] = ANY_NUMBER;
 
-        final List<TimedResource> requestInfos =
+        final List<TimedResource> timedResources =
                 Collections.singletonList(new AnyTimedResource("any", 42L));
 
-        given(this.logFileReader.read(ANY_FILE_NAME)).willReturn(ANY_FILE_CONTENT1);
-        given(this.logFileParser.parse(ANY_FILE_CONTENT1)).willReturn(requestInfos);
+        given(this.provider.apply(ANY_FILE_NAME)).willReturn(timedResources);
 
         // when
         this.logStats.start(args);
 
         // then
-        verify(this.consumer).accept(Integer.parseInt(ANY_NUMBER), requestInfos);
+        verify(this.consumer).accept(Integer.parseInt(ANY_NUMBER), timedResources);
     }
 }

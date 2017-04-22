@@ -1,5 +1,6 @@
-package ee.larseckart.logstats;
+package ee.larseckart.logstats.input;
 
+import ee.larseckart.logstats.input.LogFileLineParser;
 import ee.larseckart.logstats.model.RequestInfo;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;

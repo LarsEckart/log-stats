@@ -1,13 +1,14 @@
-package ee.larseckart.logstats;
+package ee.larseckart.logstats.input;
 
 import ee.larseckart.logstats.model.RequestInfo;
+import ee.larseckart.logstats.model.TimedResource;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
-public class LogFileLineParser implements Function<String, RequestInfo> {
+public class LogFileLineParser implements Function<String, TimedResource> {
 
     private static final String LINE_ITEM_SPLIT_ARGUMENT = " ";
     private static final int DATE_INDEX = 0;

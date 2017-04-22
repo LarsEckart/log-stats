@@ -4,21 +4,20 @@ import ee.larseckart.logstats.model.TimedResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class LogStats {
 
     private final Console console;
-    private final LogFileReader logFileReader;
-    private final LogFileParser logFileParser;
+    private final Function<String, List<TimedResource>> provider;
     private final BiConsumer<Integer, List<TimedResource>> consumer;
 
     public LogStats(
-            LogFileReader logFileReader, LogFileParser logFileParser,
-            Console console, BiConsumer<Integer, List<TimedResource>> consumer)
+            Console console,
+            Function<String, List<TimedResource>> provider, BiConsumer<Integer, List<TimedResource>> consumer)
     {
         this.console = console;
-        this.logFileReader = logFileReader;
-        this.logFileParser = logFileParser;
+        this.provider = provider;
         this.consumer = consumer;
     }
 
@@ -35,9 +34,8 @@ public class LogStats {
             } else if (hasTwoArguments(args)) {
                 try {
                     int topN = Integer.parseInt(args[1]);
-                    final String fileContent = this.logFileReader.read(args[0]);
-                    final List<TimedResource> requestInfos = this.logFileParser.parse(fileContent);
-                    this.consumer.accept(topN, requestInfos);
+                    final List<TimedResource> timedResources = this.provider.apply(args[0]);
+                    this.consumer.accept(topN, timedResources);
                 } catch (NumberFormatException exception) {
                     printUnknownArgumentsMessage();
                 }
