@@ -1,11 +1,16 @@
 package ee.larseckart.logstats;
 
+import ee.larseckart.logstats.model.RequestInfo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -30,11 +35,14 @@ public class LogStatsTest {
     @Mock
     private LogFileParser logFileParser;
 
+    @Mock
+    private BiConsumer<Integer, List<RequestInfo>> consumer;
+
     private LogStats logStats;
 
     @Before
     public void initialize() throws Exception {
-        this.logStats = new LogStats(this.console, this.logFileReader, this.logFileParser);
+        this.logStats = new LogStats(this.console, this.logFileReader, this.logFileParser, this.consumer);
     }
 
     @Test
@@ -134,5 +142,22 @@ public class LogStatsTest {
 
         // then
         verify(this.logFileParser).parse(ANY_FILE_CONTENT);
+    }
+
+    @Test
+    public void should_pass_request_infos_to_top_n_duration_consumer() throws Exception {
+        // given
+        final String[] args = new String[2];
+        args[0] = ANY_FILE_NAME;
+        args[1] = ANY_NUMBER;
+
+        final ArrayList<RequestInfo> requestInfos = new ArrayList<>();
+        given(this.logFileParser.parse(ANY_FILE_NAME)).willReturn(requestInfos);
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.consumer).accept(Integer.parseInt(ANY_NUMBER), requestInfos);
     }
 }

@@ -1,5 +1,10 @@
 package ee.larseckart.logstats;
 
+import ee.larseckart.logstats.model.RequestInfo;
+
+import java.util.List;
+import java.util.function.BiConsumer;
+
 public class LogStats {
 
     private final Console console;
@@ -29,7 +34,9 @@ public class LogStats {
                     printUnknownArgumentsMessage();
                 }
                 final String fileContent = this.logFileReader.read(args[0]);
-                this.parser.parse(fileContent);
+                final List<RequestInfo> requestInfos = this.parser.parse(fileContent);
+                BiConsumer<Integer, List<RequestInfo>> topAverageDurations = new AverageDurationCalculator();
+
             } else if (hasTooManyArguments(args)) {
                 printUnknownArgumentsMessage();
             }
