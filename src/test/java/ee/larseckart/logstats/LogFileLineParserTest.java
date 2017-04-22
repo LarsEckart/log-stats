@@ -25,7 +25,7 @@ public class LogFileLineParserTest {
         String example ="2015-08-19 00:00:22,428 (http--0.0.0.0-28080-259) [USER:300407044035] getSubcriptionCampaigns 300407044035 true in 2669";
 
         // when
-        final RequestInfo requestInfo = lineParser.apply(example);
+        final RequestInfo requestInfo = this.lineParser.apply(example);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
@@ -38,6 +38,21 @@ public class LogFileLineParserTest {
             assertThat(requestInfo.getPayloadElements().get(0)).isEqualTo("300407044035");
             assertThat(requestInfo.getPayloadElements().get(1)).isEqualTo("true");
             assertThat(requestInfo.getDuration()).isEqualTo(2669);
+        });
+    }
+
+    @Test
+    public void should_parse_line_with_empty_user_context_and_no_payload_elements() throws Exception {
+        // given
+        String example ="2015-08-19 00:00:01,963 (http--0.0.0.0-28080-245) [] /checkSession.do in 113";
+
+        // when
+        final RequestInfo requestInfo = this.lineParser.apply(example);
+
+        // then
+        SoftAssertions.assertSoftly(softly -> {
+            assertThat(requestInfo.getUserContext()).isEqualTo("");
+            assertThat(requestInfo.getPayloadElements()).hasSize(0);
         });
     }
 }

@@ -31,7 +31,6 @@ public class LogFileLineParser implements Function<String, RequestInfo> {
         final String rawUserContext = lineItems[3];
         String userContext = rawUserContext.substring(1, rawUserContext.length() - 1);
         builder.userContext(userContext);
-        // TODO: user context is optional, test what happens when log file contains []
 
         builder.resource(lineItems[4]);
         // TODO uri can have query string, need special logic here
