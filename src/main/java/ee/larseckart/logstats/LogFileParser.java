@@ -2,21 +2,36 @@ package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.model.RequestInfo;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class LogFileParser {
 
     public List<RequestInfo> parse(String fileContent) {
-        List<RequestInfo> result = new ArrayList<>();
 
-        final long count = Pattern.compile("\n").splitAsStream(fileContent).count();
+        return Pattern.compile("\n")
+                      .splitAsStream(fileContent)
+                      .map(line -> parseLine(line))
+                      .collect(Collectors.toList());
+    }
 
-        for (int i = 0; i < count; i++) {
-            final RequestInfo.Builder builder = new RequestInfo.Builder();
-            result.add(builder.build());
-        }
-        return result;
+    private RequestInfo parseLine(String line) {
+        final Pattern splitArgument = Pattern.compile(" ");
+        final String[] lineItems = line.split(splitArgument.pattern());
+
+        final RequestInfo.Builder builder = new RequestInfo.Builder();
+
+        LocalDate date = LocalDate.parse(lineItems[0]);
+        builder.date(date);
+
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss,SSS");
+        LocalTime time = LocalTime.parse(lineItems[1], format);
+        builder.timestamp(time);
+
+        return builder.build();
     }
 }
