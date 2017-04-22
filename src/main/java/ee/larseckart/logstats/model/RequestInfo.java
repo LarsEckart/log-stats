@@ -2,6 +2,7 @@ package ee.larseckart.logstats.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestInfo {
@@ -10,7 +11,7 @@ public class RequestInfo {
     private final LocalTime timestamp;
     private final String threadId;
     private final String userContext;
-    private final String uri;
+    private final String resource;
     private final List<String> payloadElements;
     private final long duration;
 
@@ -19,7 +20,7 @@ public class RequestInfo {
         this.timestamp = builder.timestamp;
         this.threadId = builder.threadId;
         this.userContext = builder.userContext;
-        this.uri = builder.uri;
+        this.resource = builder.resource;
         this.payloadElements = builder.payloadElements;
         this.duration = builder.duration;
     }
@@ -40,8 +41,8 @@ public class RequestInfo {
         return this.userContext;
     }
 
-    public String getUri() {
-        return this.uri;
+    public String getResource() {
+        return this.resource;
     }
 
     public List<String> getPayloadElements() {
@@ -58,8 +59,8 @@ public class RequestInfo {
         private LocalTime timestamp;
         private String threadId;
         private String userContext;
-        private String uri;
-        private List<String> payloadElements;
+        private String resource;
+        private List<String> payloadElements = new ArrayList<>();
         private long duration;
 
         public Builder date(LocalDate date) {
@@ -82,13 +83,18 @@ public class RequestInfo {
             return this;
         }
 
-        public Builder uri(String uri) {
-            this.uri = uri;
+        public Builder resource(String uri) {
+            this.resource = uri;
             return this;
         }
 
         public Builder payloadElements(List<String> payloadElements) {
             this.payloadElements = payloadElements;
+            return this;
+        }
+
+        public Builder payloadElement(String payloadElement) {
+            this.payloadElements.add(payloadElement);
             return this;
         }
 
@@ -102,7 +108,7 @@ public class RequestInfo {
             this.timestamp = prototype.timestamp;
             this.threadId = prototype.threadId;
             this.userContext = prototype.userContext;
-            this.uri = prototype.uri;
+            this.resource = prototype.resource;
             this.payloadElements = prototype.payloadElements;
             this.duration = prototype.duration;
             return this;
