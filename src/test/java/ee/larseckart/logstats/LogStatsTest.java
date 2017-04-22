@@ -16,11 +16,15 @@ public class LogStatsTest {
 
     @Mock
     private Console console;
+
+    @Mock
+    private LogFileReader logFileReader;
+
     private LogStats logStats;
 
     @Before
     public void initialize() throws Exception {
-        this.logStats = new LogStats(this.console);
+        this.logStats = new LogStats(this.console, this.logFileReader);
     }
 
     @Test
@@ -90,5 +94,19 @@ public class LogStatsTest {
 
         // then
         verify(this.console).printLine("Unknown argument(s), run with -h flag for help.");
+    }
+
+    @Test
+    public void should_pass_first_argument_to_logfile_reader_when_correct_arguments() throws Exception {
+        // given
+        final String[] args = new String[2];
+        args[0] = "anyFileName";
+        args[1] = "3";
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.logFileReader).read("anyFileName");
     }
 }

@@ -3,9 +3,11 @@ package ee.larseckart.logstats;
 public class LogStats {
 
     private final Console console;
+    private final LogFileReader logFileReader;
 
-    public LogStats(Console console) {
+    public LogStats(Console console, LogFileReader logFileReader) {
         this.console = console;
+        this.logFileReader = logFileReader;
     }
 
     public void start(String[] args) {
@@ -24,6 +26,7 @@ public class LogStats {
                 } catch (NumberFormatException exception) {
                     printUnknownArgumentsMessage();
                 }
+                this.logFileReader.read(args[0]);
             } else if (hasTooManyArguments(args)) {
                 printUnknownArgumentsMessage();
             }
