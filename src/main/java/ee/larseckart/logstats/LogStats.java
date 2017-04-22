@@ -30,18 +30,6 @@ public class LogStats {
         }
     }
 
-    private boolean hasTwoArguments(String[] args) {
-        return args.length == 2;
-    }
-
-    private boolean isHelpFlag(String arg) {
-        return "-h".equals(arg);
-    }
-
-    private boolean hasOneArgument(String[] args) {
-        return args.length == 1;
-    }
-
     private boolean hasNoArguments(String[] args) {
         return args.length == 0;
     }
@@ -50,10 +38,22 @@ public class LogStats {
         this.console.printLine("No args provided, run with -h flag for help.");
     }
 
+    private boolean hasOneArgument(String[] args) {
+        return args.length == 1;
+    }
+
+    private boolean isHelpFlag(String arg) {
+        return "-h".equals(arg);
+    }
+
     private void printHelpMessage() {
         this.console.printLine("Provide 2 arguments.\n"
                 + "First argument must be String s where s is the name of the log file.\n"
                 + "Second argument must be a number n where n denotes how many resources to print out.");
+    }
+
+    private boolean hasTwoArguments(String[] args) {
+        return args.length == 2;
     }
 
     private boolean hasTooManyArguments(String[] args) {
