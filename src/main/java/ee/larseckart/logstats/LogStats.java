@@ -4,10 +4,12 @@ public class LogStats {
 
     private final Console console;
     private final LogFileReader logFileReader;
+    private final LogFileParser parser;
 
-    public LogStats(Console console, LogFileReader logFileReader) {
+    public LogStats(Console console, LogFileReader logFileReader, LogFileParser parser) {
         this.console = console;
         this.logFileReader = logFileReader;
+        this.parser = parser;
     }
 
     public void start(String[] args) {
@@ -26,7 +28,8 @@ public class LogStats {
                 } catch (NumberFormatException exception) {
                     printUnknownArgumentsMessage();
                 }
-                this.logFileReader.read(args[0]);
+                final String fileContent = this.logFileReader.read(args[0]);
+                this.parser.parse(fileContent);
             } else if (hasTooManyArguments(args)) {
                 printUnknownArgumentsMessage();
             }

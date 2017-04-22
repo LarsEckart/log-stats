@@ -28,7 +28,7 @@ public class LogStatsTest {
 
     @Before
     public void initialize() throws Exception {
-        this.logStats = new LogStats(this.console, this.logFileReader);
+        this.logStats = new LogStats(this.console, this.logFileReader, this.logFileParser);
     }
 
     @Test
