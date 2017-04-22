@@ -32,15 +32,42 @@ public class LogFileLineParser implements Function<String, RequestInfo> {
         String userContext = rawUserContext.substring(1, rawUserContext.length() - 1);
         builder.userContext(userContext);
 
-        builder.resource(lineItems[4]);
-        // TODO uri can have query string, need special logic here
+        parseResource(lineItems[4], builder);
 
-        for (int i = 5; !("in".equals(lineItems[i])) ; i++) {
+        for (int i = 5; !("in".equals(lineItems[i])); i++) {
             builder.payloadElement(lineItems[i]);
         }
 
         builder.duration(Long.parseLong(lineItems[lineItems.length - 1]));
 
         return builder.build();
+    }
+
+    private void parseResource(String rawResource, RequestInfo.Builder builder) {
+        if (isUriWithQuery(rawResource)) {
+            if (rawResource.contains("?action=")) {
+                int endOfAction = determineEndOfAction(rawResource);
+                final String uriWithAction = rawResource.substring(0, endOfAction);
+                builder.resource(uriWithAction);
+            } else {
+                final String uriWithoutQuery = rawResource.substring(0, rawResource.indexOf("?"));
+                builder.resource(uriWithoutQuery);
+            }
+        } else {
+            builder.resource(rawResource);
+        }
+    }
+
+    // TODO: complicated piece of code
+    private int determineEndOfAction(String rawResource) {
+        final int actionKeyStart = rawResource.indexOf("action=");
+        int actionStartIndex = actionKeyStart + 7;
+        final String queryStringAfterAction = rawResource.substring(actionStartIndex, rawResource.length() - 1);
+        final int actionEndIndex = queryStringAfterAction.indexOf("&");
+        return actionStartIndex + actionEndIndex;
+    }
+
+    private boolean isUriWithQuery(String rawResource) {
+        return rawResource.startsWith("/") && rawResource.contains("?");
     }
 }
