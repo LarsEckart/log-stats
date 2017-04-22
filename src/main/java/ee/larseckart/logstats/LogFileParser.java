@@ -32,6 +32,15 @@ public class LogFileParser {
         LocalTime time = LocalTime.parse(lineItems[1], format);
         builder.timestamp(time);
 
+        final String rawThreadId = lineItems[2];
+        final String threadId = rawThreadId.substring(1, rawThreadId.length() - 1);
+        builder.threadId(threadId);
+
+        final String rawUserContext = lineItems[3];
+        String userContext = rawUserContext.substring(1, rawUserContext.length() - 1);
+        builder.userContext(userContext);
+        // TODO: user context is optional, test what happens when log file contains []
+
         return builder.build();
     }
 }

@@ -47,6 +47,8 @@ public class LogFileParserTest {
             final RequestInfo requestInfo = requestInfos.get(0);
             assertThat(requestInfo.getDate()).isEqualTo(LocalDate.of(2015, 8, 19));
             assertThat(requestInfo.getTimestamp()).isEqualTo(LocalTime.of(0, 0, 22, 428000000));
+            assertThat(requestInfo.getThreadId()).isEqualTo("http--0.0.0.0-28080-259");
+            assertThat(requestInfo.getUserContext()).isEqualTo("USER:300407044035");
         });
     }
 
