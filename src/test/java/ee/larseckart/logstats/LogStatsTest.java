@@ -20,8 +20,6 @@ public class LogStatsTest {
 
     private static final String ANY_ARGS = "anyArgs";
     private static final String ANY_FILE_NAME = "any_file_name";
-    private static final String ANY_FILE_CONTENT1 = "any_file_content";
-    private static final String ANY_FILE_CONTENT = ANY_FILE_CONTENT1;
     private static final String NOT_A_NUMBER = "NaN";
     private static final String ANY_NUMBER = "3";
 
@@ -66,9 +64,10 @@ public class LogStatsTest {
         this.logStats.start(args);
 
         // then
-        verify(this.console).printLine("Provide 2 arguments.\n"
-                + "First argument must be String s where s is the name of the log file.\n"
-                + "Second argument must be a number n where n denotes how many resources to print out.");
+        verify(this.console).printLine("Provide 2 arguments.");
+        verify(this.console).printLine("First argument must be String s where s is the name of the log file.");
+        verify(this.console).printLine(
+                "Second argument must be a number n where n denotes how many resources to print out.");
     }
 
     @Test
@@ -144,5 +143,21 @@ public class LogStatsTest {
 
         // then
         verify(this.consumer).accept(Integer.parseInt(ANY_NUMBER), timedResources);
+    }
+
+    @Test
+    public void should_print_file_not_found_if_illegal_argument_exception() throws Exception {
+        // given
+        final String[] args = new String[2];
+        args[0] = ANY_FILE_NAME;
+        args[1] = ANY_NUMBER;
+
+        given(this.provider.apply(ANY_FILE_NAME)).willThrow(new IllegalArgumentException("any_message"));
+
+        // when
+        this.logStats.start(args);
+
+        // then
+        verify(this.console).printLine("any_message");
     }
 }

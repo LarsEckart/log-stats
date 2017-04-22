@@ -25,23 +25,7 @@ public class LogStats {
         if (hasNoArguments(args)) {
             printInfoMessage();
         } else {
-            if (hasOneArgument(args)) {
-                if (isHelpFlag(args[0])) {
-                    printHelpMessage();
-                } else {
-                    printUnknownArgumentsMessage();
-                }
-            } else if (hasTwoArguments(args)) {
-                try {
-                    int topN = Integer.parseInt(args[1]);
-                    final List<TimedResource> timedResources = this.provider.apply(args[0]);
-                    this.consumer.accept(topN, timedResources);
-                } catch (NumberFormatException exception) {
-                    printUnknownArgumentsMessage();
-                }
-            } else if (hasTooManyArguments(args)) {
-                printUnknownArgumentsMessage();
-            }
+            processArguments(args);
         }
     }
 
@@ -53,8 +37,26 @@ public class LogStats {
         this.console.printLine("No args provided, run with -h flag for help.");
     }
 
+    private void processArguments(String[] args) {
+        if (hasOneArgument(args)) {
+            processOneArgument(args[0]);
+        } else if (hasTwoArguments(args)) {
+            processTwoArguments(args);
+        } else {
+            processTooManyArguments();
+        }
+    }
+
     private boolean hasOneArgument(String[] args) {
         return args.length == 1;
+    }
+
+    private void processOneArgument(String arg) {
+        if (isHelpFlag(arg)) {
+            printHelpMessage();
+        } else {
+            printUnknownArgumentsMessage();
+        }
     }
 
     private boolean isHelpFlag(String arg) {
@@ -62,20 +64,38 @@ public class LogStats {
     }
 
     private void printHelpMessage() {
-        this.console.printLine("Provide 2 arguments.\n"
-                + "First argument must be String s where s is the name of the log file.\n"
-                + "Second argument must be a number n where n denotes how many resources to print out.");
+        this.console.printLine("Provide 2 arguments.");
+        this.console.printLine("First argument must be String s where s is the name of the log file.");
+        this.console.printLine("Second argument must be a number n where n denotes how many resources to print out.");
     }
 
     private boolean hasTwoArguments(String[] args) {
         return args.length == 2;
     }
 
-    private boolean hasTooManyArguments(String[] args) {
-        return args.length > 2;
+    private void processTwoArguments(String[] args) {
+        final String fileName = args[0];
+        final String rawTopN = args[1];
+        try {
+            int topN = Integer.parseInt(rawTopN);
+            final List<TimedResource> timedResources = this.provider.apply(fileName);
+            this.consumer.accept(topN, timedResources);
+        } catch (NumberFormatException exception) {
+            printUnknownArgumentsMessage();
+        } catch (IllegalArgumentException exception) {
+            printFileErrorMessage(exception.getMessage());
+        }
     }
 
     private void printUnknownArgumentsMessage() {
         this.console.printLine("Unknown argument(s), run with -h flag for help.");
+    }
+
+    private void printFileErrorMessage(String errorMessage) {
+        this.console.printLine(errorMessage);
+    }
+
+    private void processTooManyArguments() {
+        printUnknownArgumentsMessage();
     }
 }

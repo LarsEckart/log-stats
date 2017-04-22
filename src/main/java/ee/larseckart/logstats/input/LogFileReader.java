@@ -1,5 +1,6 @@
 package ee.larseckart.logstats.input;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -8,11 +9,11 @@ public class LogFileReader {
 
     public String read(String logFileName) {
         try {
-            String content = new String(Files.readAllBytes(Paths.get(logFileName)));
-            return content;
-        } catch (IOException e) {
-            // TODO: figure out how to deal with exceptions
-            throw new RuntimeException(e);
+            return new String(Files.readAllBytes(Paths.get(logFileName)));
+        } catch (FileNotFoundException exception) {
+            throw new IllegalArgumentException("File " + logFileName + " not found.", exception);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Could not read file.", exception);
         }
     }
 }

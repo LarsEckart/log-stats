@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class AverageDurationCalculatorTest {
@@ -43,7 +45,8 @@ public class AverageDurationCalculatorTest {
         this.averageDurationCalculator.accept(2, timedResources);
 
         // then
-        verify(this.console).printLine("B: 10.0");
-        verify(this.console).printLine("C: 6.0");
+        verify(this.console, times(1)).printLine("B: 10.0");
+        verify(this.console, times(1)).printLine("C: 6.0");
+        verify(this.console, times(2)).printLine(anyString());
     }
 }
