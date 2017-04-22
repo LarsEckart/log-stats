@@ -31,7 +31,9 @@ public class LogFileParserTest {
     }
 
     @Test
-    public void should_parse_file_content_with_multiple_lines_and_create_request_info_objects_from_it() throws Exception {
+    public void should_parse_file_content_with_multiple_lines_and_create_request_info_objects_from_it()
+            throws Exception
+    {
         // given
         String example = "line1\nline2\nline3\n";
 

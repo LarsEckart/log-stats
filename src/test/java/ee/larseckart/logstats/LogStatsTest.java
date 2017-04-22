@@ -43,7 +43,7 @@ public class LogStatsTest {
 
     @Before
     public void initialize() throws Exception {
-        this.logStats = new LogStats(this.console, this.logFileReader, this.logFileParser, this.consumer);
+        this.logStats = new LogStats(this.logFileReader, this.logFileParser, this.console, this.consumer);
     }
 
     @Test

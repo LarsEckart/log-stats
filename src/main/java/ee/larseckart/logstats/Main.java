@@ -14,6 +14,6 @@ public class Main {
         final LogFileParser fileParser = new LogFileParser(lineParser);
         final BiConsumer<Integer, List<TimedResource>> consumer = new AverageDurationCalculator(console);
 
-        new LogStats(console, logFileReader, fileParser, consumer).start(args);
+        new LogStats(logFileReader, fileParser, console, consumer).start(args);
     }
 }

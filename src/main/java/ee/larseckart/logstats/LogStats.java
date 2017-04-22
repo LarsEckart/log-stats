@@ -12,7 +12,10 @@ public class LogStats {
     private final LogFileParser logFileParser;
     private final BiConsumer<Integer, List<TimedResource>> consumer;
 
-    public LogStats(Console console, LogFileReader logFileReader, LogFileParser logFileParser, BiConsumer<Integer, List<TimedResource>> consumer) {
+    public LogStats(
+            LogFileReader logFileReader, LogFileParser logFileParser,
+            Console console, BiConsumer<Integer, List<TimedResource>> consumer)
+    {
         this.console = console;
         this.logFileReader = logFileReader;
         this.logFileParser = logFileParser;
@@ -38,7 +41,6 @@ public class LogStats {
                 } catch (NumberFormatException exception) {
                     printUnknownArgumentsMessage();
                 }
-
             } else if (hasTooManyArguments(args)) {
                 printUnknownArgumentsMessage();
             }

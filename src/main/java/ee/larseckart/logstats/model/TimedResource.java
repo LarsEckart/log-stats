@@ -5,5 +5,4 @@ public interface TimedResource {
     public String getResource();
 
     public long getDuration();
-
 }

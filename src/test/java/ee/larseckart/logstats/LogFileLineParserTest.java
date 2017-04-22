@@ -22,7 +22,8 @@ public class LogFileLineParserTest {
     @Test
     public void should_parse_line_with_user_context_and_multiple_payload_elements() throws Exception {
         // given
-        String example ="2015-08-19 00:00:22,428 (http--0.0.0.0-28080-259) [USER:300407044035] getSubcriptionCampaigns 300407044035 true in 2669";
+        String example =
+                "2015-08-19 00:00:22,428 (http--0.0.0.0-28080-259) [USER:300407044035] getSubcriptionCampaigns 300407044035 true in 2669";
 
         // when
         final RequestInfo requestInfo = this.lineParser.apply(example);
@@ -44,7 +45,7 @@ public class LogFileLineParserTest {
     @Test
     public void should_parse_line_with_empty_user_context_and_no_payload_elements() throws Exception {
         // given
-        String example ="2015-08-19 00:00:01,963 (http--0.0.0.0-28080-245) [] /checkSession.do in 113";
+        String example = "2015-08-19 00:00:01,963 (http--0.0.0.0-28080-245) [] /checkSession.do in 113";
 
         // when
         final RequestInfo requestInfo = this.lineParser.apply(example);
@@ -59,28 +60,26 @@ public class LogFileLineParserTest {
     @Test
     public void should_parse_line_with_uri_and_query_string() throws Exception {
         // given
-        String example ="2015-08-19 00:00:02,814 (http--0.0.0.0-28080-245) [CUST:CUS5T27233] /substypechange.do?msisdn=300501633574 in 17";
+        String example =
+                "2015-08-19 00:00:02,814 (http--0.0.0.0-28080-245) [CUST:CUS5T27233] /substypechange.do?msisdn=300501633574 in 17";
 
         // when
         final RequestInfo requestInfo = this.lineParser.apply(example);
 
         // then
-        SoftAssertions.assertSoftly(softly -> {
-            assertThat(requestInfo.getResource()).isEqualTo("/substypechange.do");
-        });
+        assertThat(requestInfo.getResource()).isEqualTo("/substypechange.do");
     }
 
     @Test
     public void should_parse_line_with_uri_and_query_string_which_has_action_query_param() throws Exception {
         // given
-        String example ="2015-08-19 00:00:03,260 (http--0.0.0.0-28080-245) [CUST:CUS5T27233] /mainContent.do?action=TOOLS&contentId=main_tools in 5";
+        String example =
+                "2015-08-19 00:00:03,260 (http--0.0.0.0-28080-245) [CUST:CUS5T27233] /mainContent.do?action=TOOLS&contentId=main_tools in 5";
 
         // when
         final RequestInfo requestInfo = this.lineParser.apply(example);
 
         // then
-        SoftAssertions.assertSoftly(softly -> {
-            assertThat(requestInfo.getResource()).isEqualTo("/mainContent.do?action=TOOLS");
-        });
+        assertThat(requestInfo.getResource()).isEqualTo("/mainContent.do?action=TOOLS");
     }
 }

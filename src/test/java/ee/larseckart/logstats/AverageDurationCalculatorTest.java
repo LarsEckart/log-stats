@@ -26,7 +26,7 @@ public class AverageDurationCalculatorTest {
 
     @Before
     public void initialize() throws Exception {
-        this.averageDurationCalculator = new AverageDurationCalculator(console);
+        this.averageDurationCalculator = new AverageDurationCalculator(this.console);
     }
 
     @Test
