@@ -10,11 +10,13 @@ public class LogStats {
     private final Console console;
     private final LogFileReader logFileReader;
     private final LogFileParser parser;
+    private final BiConsumer<Integer, List<RequestInfo>> consumer;
 
-    public LogStats(Console console, LogFileReader logFileReader, LogFileParser parser) {
+    public LogStats(Console console, LogFileReader logFileReader, LogFileParser parser, BiConsumer<Integer, List<RequestInfo>> consumer) {
         this.console = console;
         this.logFileReader = logFileReader;
         this.parser = parser;
+        this.consumer = consumer;
     }
 
     public void start(String[] args) {
@@ -30,12 +32,12 @@ public class LogStats {
             } else if (hasTwoArguments(args)) {
                 try {
                     int topN = Integer.parseInt(args[1]);
+                    final String fileContent = this.logFileReader.read(args[0]);
+                    final List<RequestInfo> requestInfos = this.parser.parse(fileContent);
+                    this.consumer.accept(topN, requestInfos);
                 } catch (NumberFormatException exception) {
                     printUnknownArgumentsMessage();
                 }
-                final String fileContent = this.logFileReader.read(args[0]);
-                final List<RequestInfo> requestInfos = this.parser.parse(fileContent);
-                BiConsumer<Integer, List<RequestInfo>> topAverageDurations = new AverageDurationCalculator();
 
             } else if (hasTooManyArguments(args)) {
                 printUnknownArgumentsMessage();
