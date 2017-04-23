@@ -45,8 +45,8 @@ public class AverageDurationCalculatorTest {
         this.averageDurationCalculator.accept(2, timedResources);
 
         // then
-        verify(this.console, times(1)).printLine("B: 10.0");
-        verify(this.console, times(1)).printLine("C: 6.0");
+        verify(this.console, times(1)).printLine("B: 10.00 ms");
+        verify(this.console, times(1)).printLine("C: 6.00 ms");
         verify(this.console, times(2)).printLine(anyString());
     }
 }

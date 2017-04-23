@@ -4,6 +4,7 @@ import ee.larseckart.logstats.model.TimedResource;
 
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class AverageDurationCalculator implements BiConsumer<Integer, List<Timed
 
         @Override
         public String toString() {
-            return this.name + ": " + this.value;
+            return String.format("%s: %.2f ms", this.name, this.value);
         }
     }
 }
