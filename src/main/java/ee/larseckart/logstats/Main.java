@@ -14,14 +14,14 @@ public class Main {
 
     public static void main(String[] args) {
         final LogFileReader logFileReader = new LogFileReader();
-        final LogFileLineParser logFileLineParser = new LogFileLineParser();
+        final Function<String, TimedResource> logFileLineParser = new LogFileLineParser();
         final Function<String, List<TimedResource>> provider = new LogFileInput(logFileReader, logFileLineParser);
 
         final Console console = new Console();
-        final BiConsumer<Integer, List<TimedResource>> consumer = new AverageDurationCalculator(console);
+        final BiConsumer<Integer, List<TimedResource>> topNconsumer = new AverageDurationCalculator(console);
 
         final Clock clock = Clock.systemDefaultZone();
 
-        new LogStats(clock, console, provider, consumer).execute(args);
+        new LogStats(clock, console, provider, topNconsumer).execute(args);
     }
 }
