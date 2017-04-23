@@ -1,6 +1,5 @@
 package ee.larseckart.logstats.input;
 
-import ee.larseckart.logstats.input.LogFileLineParser;
 import ee.larseckart.logstats.model.RequestInfo;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
@@ -59,7 +58,7 @@ public class LogFileLineParserTest {
     }
 
     @Test
-    public void should_parse_line_with_uri_and_query_string() throws Exception {
+    public void should_parse_line_with_uri_plus_query_string() throws Exception {
         // given
         String example =
                 "2015-08-19 00:00:02,814 (http--0.0.0.0-28080-245) [CUST:CUS5T27233] /substypechange.do?msisdn=300501633574 in 17";
@@ -72,7 +71,7 @@ public class LogFileLineParserTest {
     }
 
     @Test
-    public void should_parse_line_with_uri_and_query_string_which_has_action_query_param() throws Exception {
+    public void should_parse_line_with_uri_plus_query_string_which_has_action_query_param() throws Exception {
         // given
         String example =
                 "2015-08-19 00:00:03,260 (http--0.0.0.0-28080-245) [CUST:CUS5T27233] /mainContent.do?action=TOOLS&contentId=main_tools in 5";
@@ -82,5 +81,18 @@ public class LogFileLineParserTest {
 
         // then
         assertThat(requestInfo.getResource()).isEqualTo("/mainContent.do?action=TOOLS");
+    }
+
+    @Test
+    public void should_parse_line_with_uri_plus_query_string_which_has_only_action_query_param() throws Exception {
+        // given
+        String example =
+                "2015-08-19 23:06:48,372 (http--0.0.0.0-28080-297) [CUST:CUS12B1435] /customerInfo.do?action=CUSTOMERINFO in 9999";
+
+        // when
+        final RequestInfo requestInfo = this.lineParser.apply(example);
+
+        // then
+        assertThat(requestInfo.getResource()).isEqualTo("/customerInfo.do?action=CUSTOMERINFO");
     }
 }

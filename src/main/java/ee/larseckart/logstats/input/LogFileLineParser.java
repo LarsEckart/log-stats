@@ -10,18 +10,20 @@ import java.util.function.Function;
 
 public class LogFileLineParser implements Function<String, TimedResource> {
 
-    private static final String LINE_ITEM_SPLIT_ARGUMENT = " ";
+    private static final String LINE_ITEM_SEPARATOR = " ";
     private static final int DATE_INDEX = 0;
     private static final int TIMESTAMP_INDEX = 1;
     private static final int THREAD_ID_INDEX = 2;
     private static final int USER_CONTEXT_INDEX = 3;
     private static final int RESOURCE_INDEX = 4;
     private static final int PAYLOAD_ELEMENTS_INDEX = 5;
+
     private static final String ACTION_QUERY_PARAM = "action=";
+    private static final String QUERY_SEPARATOR = "&";
 
     @Override
     public RequestInfo apply(String text) {
-        final String[] lineItems = text.split(LINE_ITEM_SPLIT_ARGUMENT);
+        final String[] lineItems = text.split(LINE_ITEM_SEPARATOR);
 
         final RequestInfo.Builder builder = new RequestInfo.Builder();
 
@@ -100,9 +102,16 @@ public class LogFileLineParser implements Function<String, TimedResource> {
         int actionValueStartIndex = actionKeyStartIndex + offset;
 
         final String uriAfterActionQueryKey = rawResource.substring(actionValueStartIndex, rawResource.length() - 1);
-        final int actionValueEndIndex = uriAfterActionQueryKey.indexOf("&");
+        if (hasQueryparamsAfterAction(uriAfterActionQueryKey)) {
+            final int actionValueEndIndex = uriAfterActionQueryKey.indexOf(QUERY_SEPARATOR);
+            return actionValueStartIndex + actionValueEndIndex;
+        } else {
+            return rawResource.length();
+        }
+    }
 
-        return actionValueStartIndex + actionValueEndIndex;
+    private boolean hasQueryparamsAfterAction(String uriAfterActionQueryKey) {
+        return uriAfterActionQueryKey.contains(QUERY_SEPARATOR);
     }
 
     private void parsePayloadElements(String[] lineItems, RequestInfo.Builder builder) {
