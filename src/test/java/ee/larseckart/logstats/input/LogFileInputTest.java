@@ -20,14 +20,14 @@ public class LogFileInputTest {
 
     private static final String ANY_FILE_NAME = "any_file_name";
 
+    private final Function<String, TimedResource> logFileLineParser =
+            text -> new AnyTimedResource("any", 42L);
+
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     private LogFileReader logFileReader;
-
-    private final Function<String, TimedResource> logFileLineParser =
-            text -> new AnyTimedResource("any", 42L);
 
     private LogFileInput logFileInput;
 
@@ -49,9 +49,21 @@ public class LogFileInputTest {
     }
 
     @Test
-    public void should_return_a_timed_resource_for_each_line() throws Exception {
+    public void should_return_a_timed_resource_for_each_line_when_unix_line_end() throws Exception {
         // given
         given(this.logFileReader.read(ANY_FILE_NAME)).willReturn("line1\nline2\nline3");
+
+        // when
+        final List<TimedResource> timedResources = this.logFileInput.apply(ANY_FILE_NAME);
+
+        // then
+        assertThat(timedResources).hasSize(3);
+    }
+
+    @Test
+    public void should_return_a_timed_resource_for_each_line_when_windows_line_end() throws Exception {
+        // given
+        given(this.logFileReader.read(ANY_FILE_NAME)).willReturn("line1\r\nline2\r\nline3");
 
         // when
         final List<TimedResource> timedResources = this.logFileInput.apply(ANY_FILE_NAME);

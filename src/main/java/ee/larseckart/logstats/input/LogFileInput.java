@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 public class LogFileInput implements Function<String, List<TimedResource>> {
 
+    private static final String LINE_ENDING = "\r\n|\n"; // matches windows (\r\n) and unix (\n) line endings.
+
     private final LogFileReader fileReader;
     private final Function<String, TimedResource> logFileLineParser;
 
@@ -20,7 +22,7 @@ public class LogFileInput implements Function<String, List<TimedResource>> {
     @Override
     public List<TimedResource> apply(String fileName) {
         final String fileContent = this.fileReader.read(fileName);
-        return Pattern.compile("\n")
+        return Pattern.compile(LINE_ENDING)
                       .splitAsStream(fileContent)
                       .map(line -> this.logFileLineParser.apply(line))
                       .collect(Collectors.toList());

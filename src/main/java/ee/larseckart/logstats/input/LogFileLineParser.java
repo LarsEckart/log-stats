@@ -120,9 +120,7 @@ public class LogFileLineParser implements Function<String, TimedResource> {
         }
     }
 
-    /** Duration as last item in a row can also contain \r or \n, which has to be removed */
     private void parseDuration(String lineItem, RequestInfo.Builder builder) {
-        final String rawDuration = lineItem.trim();
-        builder.duration(Long.parseLong(rawDuration));
+        builder.duration(Long.parseLong(lineItem));
     }
 }
