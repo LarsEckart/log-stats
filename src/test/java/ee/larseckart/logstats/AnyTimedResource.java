@@ -2,6 +2,8 @@ package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.model.TimedResource;
 
+import java.time.LocalTime;
+
 public class AnyTimedResource implements TimedResource {
 
     private final String resource;
@@ -20,5 +22,10 @@ public class AnyTimedResource implements TimedResource {
     @Override
     public long getDuration() {
         return this.duration;
+    }
+
+    @Override
+    public LocalTime getTimestamp() {
+        return null;
     }
 }

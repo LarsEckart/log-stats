@@ -62,3 +62,12 @@ pitest {
     outputFormats = ['HTML']
     enableDefaultIncrementalAnalysis = true
 }
+
+task histogram(type: JavaExec, dependsOn: 'classes') {
+    classpath = sourceSets.main.runtimeClasspath
+
+    main = 'ee.larseckart.logstats.ui.HourlyCountHistogram'
+
+    // arguments to pass to the application
+    args 'timing.log'
+}

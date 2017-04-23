@@ -29,6 +29,7 @@ public class RequestInfo implements TimedResource {
         return this.date;
     }
 
+    @Override
     public LocalTime getTimestamp() {
         return this.timestamp;
     }
