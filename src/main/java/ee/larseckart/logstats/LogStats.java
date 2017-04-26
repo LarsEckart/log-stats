@@ -25,13 +25,13 @@ public class LogStats {
     }
 
     public void execute(String[] args) {
-        final long start = this.clock.millis();
+        long start = this.clock.millis();
         if (hasNoArguments(args)) {
             printInfoMessage();
         } else {
             processArguments(args);
         }
-        final long duration = this.clock.millis() - start;
+        long duration = this.clock.millis() - start;
         this.console.printLine("Execution took " + duration + " milliseconds.");
     }
 
@@ -80,17 +80,30 @@ public class LogStats {
     }
 
     private void processTwoArguments(String[] args) {
-        final String fileName = args[0];
-        final String rawTopN = args[1];
+        String fileName = args[0];
+        String rawTopN = args[1];
         try {
-            int topN = Integer.parseInt(rawTopN);
-            final List<TimedResource> timedResources = this.provider.apply(fileName);
+            int topN = parseTopN(rawTopN);
+            List<TimedResource> timedResources = this.provider.apply(fileName);
             this.consumer.accept(topN, timedResources);
         } catch (NumberFormatException exception) {
             printUnknownArgumentsMessage();
         } catch (IllegalArgumentException exception) {
             printFileErrorMessage(exception.getMessage());
         }
+    }
+
+    private int parseTopN(String rawTopN) {
+        int topN = Integer.parseInt(rawTopN);
+        if (isNegativeNumber(topN)) {
+            throw new IllegalArgumentException("TopN argument must be positive.");
+        }
+
+        return topN;
+    }
+
+    private boolean isNegativeNumber(int topN) {
+        return topN <= 0;
     }
 
     private void printUnknownArgumentsMessage() {

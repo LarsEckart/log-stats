@@ -22,7 +22,8 @@ public class LogStatsTest {
     private static final String ANY_ARGS = "anyArgs";
     private static final String ANY_FILE_NAME = "any_file_name";
     private static final String NOT_A_NUMBER = "NaN";
-    private static final String ANY_NUMBER = "3";
+    private static final String ANY_POSITIVE_NUMBER = "3";
+    private static final String ANY_NEGATIVE_NUMBER = "-42";
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -117,11 +118,39 @@ public class LogStatsTest {
     }
 
     @Test
+    public void should_print_how_to_use_the_application_when_2_args_but_second_arg_is_negative_number() throws Exception {
+        // given
+        final String[] args = new String[2];
+        args[0] = ANY_ARGS;
+        args[1] = ANY_NEGATIVE_NUMBER;
+
+        // when
+        this.logStats.execute(args);
+
+        // then
+        verify(this.console).printLine("TopN argument must be positive.");
+    }
+
+    @Test
+    public void should_print_how_to_use_the_application_when_2_args_but_second_arg_is_0() throws Exception {
+        // given
+        final String[] args = new String[2];
+        args[0] = ANY_ARGS;
+        args[1] = "0";
+
+        // when
+        this.logStats.execute(args);
+
+        // then
+        verify(this.console).printLine("TopN argument must be positive.");
+    }
+
+    @Test
     public void should_pass_first_argument_to_timed_resource_provider_when_correct_arguments() throws Exception {
         // given
         final String[] args = new String[2];
         args[0] = ANY_FILE_NAME;
-        args[1] = ANY_NUMBER;
+        args[1] = ANY_POSITIVE_NUMBER;
 
         // when
         this.logStats.execute(args);
@@ -135,7 +164,7 @@ public class LogStatsTest {
         // given
         final String[] args = new String[2];
         args[0] = ANY_FILE_NAME;
-        args[1] = ANY_NUMBER;
+        args[1] = ANY_POSITIVE_NUMBER;
 
         final List<TimedResource> timedResources =
                 Collections.singletonList(new AnyTimedResource("any", 42L));
@@ -146,7 +175,7 @@ public class LogStatsTest {
         this.logStats.execute(args);
 
         // then
-        verify(this.consumer).accept(Integer.parseInt(ANY_NUMBER), timedResources);
+        verify(this.consumer).accept(Integer.parseInt(ANY_POSITIVE_NUMBER), timedResources);
     }
 
     @Test
@@ -154,7 +183,7 @@ public class LogStatsTest {
         // given
         final String[] args = new String[2];
         args[0] = ANY_FILE_NAME;
-        args[1] = ANY_NUMBER;
+        args[1] = ANY_POSITIVE_NUMBER;
 
         given(this.provider.apply(ANY_FILE_NAME)).willThrow(new IllegalArgumentException("any_message"));
 
@@ -170,7 +199,7 @@ public class LogStatsTest {
         // given
         final String[] anyArgs = new String[2];
         anyArgs[0] = ANY_FILE_NAME;
-        anyArgs[1] = ANY_NUMBER;
+        anyArgs[1] = ANY_POSITIVE_NUMBER;
 
         given(this.clock.millis()).willReturn(50L, 75L);
 
