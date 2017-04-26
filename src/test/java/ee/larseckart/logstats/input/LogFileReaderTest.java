@@ -1,6 +1,5 @@
 package ee.larseckart.logstats.input;
 
-import ee.larseckart.logstats.input.LogFileReader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class LogFileReaderTest {
         String fileContent = this.logFileReader.read(filePath);
 
         // then
-        assertThat(fileContent).isEqualTo("line1\nline2\n");
+        assertThat(fileContent).isEqualTo("line1" + System.lineSeparator() + "line2" + System.lineSeparator());
     }
 
     private void initializeTempFile() throws IOException {
