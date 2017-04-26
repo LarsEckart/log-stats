@@ -23,9 +23,9 @@ public class LogFileLineParser implements Function<String, TimedResource> {
 
     @Override
     public RequestInfo apply(String text) {
-        final String[] lineItems = text.split(LINE_ITEM_SEPARATOR);
+        String[] lineItems = text.split(LINE_ITEM_SEPARATOR);
 
-        final RequestInfo.Builder builder = new RequestInfo.Builder();
+        RequestInfo.Builder builder = new RequestInfo.Builder();
 
         parseDate(lineItems[DATE_INDEX], builder);
         parseTimestamp(lineItems[TIMESTAMP_INDEX], builder);
@@ -51,7 +51,7 @@ public class LogFileLineParser implements Function<String, TimedResource> {
     }
 
     private void parseThreadId(String lineItem, RequestInfo.Builder builder) {
-        final String threadId = removeFirstAndLastCharacter(lineItem);
+        String threadId = removeFirstAndLastCharacter(lineItem);
         builder.threadId(threadId);
     }
 
@@ -91,19 +91,19 @@ public class LogFileLineParser implements Function<String, TimedResource> {
 
     private void parseUriWithActionQuery(String rawResource, RequestInfo.Builder builder) {
         int endOfActionIndex = calculateEndOfAction(rawResource);
-        final String uriWithAction = rawResource.substring(0, endOfActionIndex);
+        String uriWithAction = rawResource.substring(0, endOfActionIndex);
         builder.resource(uriWithAction);
     }
 
     /** Assumes that action is always the first query parameter! */
     private int calculateEndOfAction(String rawResource) {
-        final int actionKeyStartIndex = rawResource.indexOf(ACTION_QUERY_PARAM);
+        int actionKeyStartIndex = rawResource.indexOf(ACTION_QUERY_PARAM);
         int offset = ACTION_QUERY_PARAM.length();
         int actionValueStartIndex = actionKeyStartIndex + offset;
 
-        final String uriAfterActionQueryKey = rawResource.substring(actionValueStartIndex, rawResource.length() - 1);
+        String uriAfterActionQueryKey = rawResource.substring(actionValueStartIndex, rawResource.length() - 1);
         if (hasQueryparamsAfterAction(uriAfterActionQueryKey)) {
-            final int actionValueEndIndex = uriAfterActionQueryKey.indexOf(QUERY_SEPARATOR);
+            int actionValueEndIndex = uriAfterActionQueryKey.indexOf(QUERY_SEPARATOR);
             return actionValueStartIndex + actionValueEndIndex;
         } else {
             return rawResource.length();

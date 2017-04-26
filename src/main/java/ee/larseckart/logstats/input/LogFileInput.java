@@ -21,7 +21,7 @@ public class LogFileInput implements Function<String, List<TimedResource>> {
 
     @Override
     public List<TimedResource> apply(String fileName) {
-        final String fileContent = this.fileReader.read(fileName);
+        String fileContent = this.fileReader.read(fileName);
         return Pattern.compile(LINE_ENDING)
                       .splitAsStream(fileContent)
                       .map(line -> this.logFileLineParser.apply(line))
