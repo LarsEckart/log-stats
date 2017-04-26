@@ -4,7 +4,6 @@ import ee.larseckart.logstats.model.TimedResource;
 
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -20,25 +19,24 @@ public class AverageDurationCalculator implements BiConsumer<Integer, List<Timed
     @Override
     public void accept(Integer topN, List<TimedResource> timedResources) {
 
-        Map<String, DoubleSummaryStatistics> aggregated = aggregateData(timedResources);
+        Map<String, DoubleSummaryStatistics> resourceStatistics = aggregateData(timedResources);
 
-        List<AggregationResult> averageDuration = calculateAverageAndSortAscending(aggregated);
+        List<AggregationResult> averageDurations = prepareSortedResultList(resourceStatistics);
 
-        for (int i = 0; i < topN; i++) {
-            this.console.printLine(averageDuration.get(i).toString());
+        final int maxIterations = Math.min(topN, resourceStatistics.keySet().size());
+        for (int i = 0; i < maxIterations; i++) {
+            this.console.printLine(averageDurations.get(i).toString());
         }
     }
 
     private Map<String, DoubleSummaryStatistics> aggregateData(List<TimedResource> timedResources) {
         return timedResources.stream()
-                             .collect(
-                                     Collectors.groupingBy(
-                                             timedResource -> timedResource.getResource(),
-                                             Collectors.summarizingDouble(
-                                                     timedResource -> timedResource.getDuration())));
+                             .collect(Collectors.groupingBy(
+                                        timedResource -> timedResource.getResource(),
+                                        Collectors.summarizingDouble(timedResource -> timedResource.getDuration())));
     }
 
-    private List<AggregationResult> calculateAverageAndSortAscending(Map<String, DoubleSummaryStatistics> aggregated) {
+    private List<AggregationResult> prepareSortedResultList(Map<String, DoubleSummaryStatistics> aggregated) {
         return aggregated.entrySet()
                          .stream()
                          .map(entry -> new AggregationResult(entry.getKey(), entry.getValue().getAverage()))

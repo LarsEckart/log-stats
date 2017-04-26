@@ -42,11 +42,29 @@ public class AverageDurationCalculatorTest {
         // A: 5 ; B: 10 ; C: 6 ; D: 1
 
         // when
-        this.averageDurationCalculator.accept(2, timedResources);
+        this.averageDurationCalculator.accept(3, timedResources);
 
         // then
         verify(this.console, times(1)).printLine("B: 10.00 ms");
         verify(this.console, times(1)).printLine("C: 6.00 ms");
+        verify(this.console, times(1)).printLine("A: 5.00 ms");
+        verify(this.console, times(3)).printLine(anyString());
+    }
+
+    @Test
+    public void should_print_n_resources_when_n_more_than_different_resources() throws Exception {
+        // given
+        final List<TimedResource> timedResources = Arrays.asList(
+                new AnyTimedResource("A", 2L), new AnyTimedResource("B", 4L),
+                new AnyTimedResource("A", 8L), new AnyTimedResource("B", 16L));
+        // A: 5 ; B: 10 ;
+
+        // when
+        this.averageDurationCalculator.accept(3, timedResources);
+
+        // then
+        verify(this.console, times(1)).printLine("B: 10.00 ms");
+        verify(this.console, times(1)).printLine("A: 5.00 ms");
         verify(this.console, times(2)).printLine(anyString());
     }
 }
