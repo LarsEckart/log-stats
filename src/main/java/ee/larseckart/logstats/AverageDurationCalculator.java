@@ -21,26 +21,24 @@ public class AverageDurationCalculator implements BiConsumer<Integer, List<Timed
 
         Map<String, DoubleSummaryStatistics> resourceStatistics = aggregateData(timedResources);
 
-        List<AggregationResult> averageDurations = prepareSortedResultList(resourceStatistics);
+        List<AggregationResult> averageDurations = prepareSortedResultList(topN, resourceStatistics);
 
-        final int maxIterations = Math.min(topN, resourceStatistics.keySet().size());
-        for (int i = 0; i < maxIterations; i++) {
-            this.console.printLine(averageDurations.get(i).toString());
-        }
+        averageDurations.forEach(ad -> this.console.printLine(ad.toString()));
     }
 
     private Map<String, DoubleSummaryStatistics> aggregateData(List<TimedResource> timedResources) {
         return timedResources.stream()
                              .collect(Collectors.groupingBy(
-                                        timedResource -> timedResource.getResource(),
-                                        Collectors.summarizingDouble(timedResource -> timedResource.getDuration())));
+                                     timedResource -> timedResource.getResource(),
+                                     Collectors.summarizingDouble(timedResource -> timedResource.getDuration())));
     }
 
-    private List<AggregationResult> prepareSortedResultList(Map<String, DoubleSummaryStatistics> aggregated) {
+    private List<AggregationResult> prepareSortedResultList(int topN, Map<String, DoubleSummaryStatistics> aggregated) {
         return aggregated.entrySet()
                          .stream()
                          .map(entry -> new AggregationResult(entry.getKey(), entry.getValue().getAverage()))
                          .sorted((s1, s2) -> s2.getValue().compareTo(s1.getValue()))
+                         .limit(topN)
                          .collect(Collectors.toList());
     }
 
