@@ -2,7 +2,6 @@ package ee.larseckart.logstats.ui;
 
 import ee.larseckart.logstats.input.LogFileInput;
 import ee.larseckart.logstats.input.LogFileLineParser;
-import ee.larseckart.logstats.input.LogFileReader;
 import ee.larseckart.logstats.model.TimedResource;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -35,9 +34,8 @@ public class HourlyCountHistogram extends Application {
     }
 
     private static List<TimedResource> readDataFromLogFile(String arg) {
-        final LogFileReader logFileReader = new LogFileReader();
         final Function<String, TimedResource> logFileLineParser = new LogFileLineParser();
-        final Function<String, List<TimedResource>> provider = new LogFileInput(logFileReader, logFileLineParser);
+        final Function<String, List<TimedResource>> provider = new LogFileInput(logFileLineParser);
         return provider.apply(arg);
     }
 

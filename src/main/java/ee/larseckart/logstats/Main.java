@@ -2,7 +2,6 @@ package ee.larseckart.logstats;
 
 import ee.larseckart.logstats.input.LogFileInput;
 import ee.larseckart.logstats.input.LogFileLineParser;
-import ee.larseckart.logstats.input.LogFileReader;
 import ee.larseckart.logstats.model.TimedResource;
 
 import java.time.Clock;
@@ -13,9 +12,8 @@ import java.util.function.Function;
 public class Main {
 
     public static void main(String[] args) {
-        LogFileReader logFileReader = new LogFileReader();
         Function<String, TimedResource> logFileLineParser = new LogFileLineParser();
-        Function<String, List<TimedResource>> provider = new LogFileInput(logFileReader, logFileLineParser);
+        Function<String, List<TimedResource>> provider = new LogFileInput(logFileLineParser);
 
         Console console = new Console();
         BiConsumer<Integer, List<TimedResource>> topNconsumer = new AverageDurationCalculator(console);
