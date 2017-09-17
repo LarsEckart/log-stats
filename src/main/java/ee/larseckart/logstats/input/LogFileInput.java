@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 public class LogFileInput implements Function<String, List<TimedResource>> {
 
     private final Function<String, TimedResource> logFileLineParser;
 
+    @Inject
     public LogFileInput(Function<String, TimedResource> logFileLineParser) {
         this.logFileLineParser = logFileLineParser;
     }
@@ -22,11 +24,8 @@ public class LogFileInput implements Function<String, List<TimedResource>> {
     @Override
     public List<TimedResource> apply(String fileName) {
         try (Stream<String> stream = Files.lines(Paths.get(fileName), StandardCharsets.UTF_8)) {
-            return stream.map(line -> this.logFileLineParser.apply(line))
-                         .collect(Collectors.toList());
-        } catch (
-                IOException exception)
-        {
+            return stream.map(line -> this.logFileLineParser.apply(line)).collect(Collectors.toList());
+        } catch (IOException exception) {
             throw new IllegalArgumentException("Could not read file '" + fileName + "'.", exception);
         }
     }

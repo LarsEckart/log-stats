@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 public class AverageDurationCalculator implements BiConsumer<Integer, List<TimedResource>> {
 
     private final Console console;
 
+    @Inject
     public AverageDurationCalculator(Console console) {
         this.console = console;
     }

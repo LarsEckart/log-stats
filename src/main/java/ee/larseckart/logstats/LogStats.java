@@ -6,6 +6,7 @@ import java.time.Clock;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import javax.inject.Inject;
 
 public class LogStats {
 
@@ -14,6 +15,7 @@ public class LogStats {
     private final Function<String, List<TimedResource>> provider;
     private final BiConsumer<Integer, List<TimedResource>> consumer;
 
+    @Inject
     public LogStats(
             Clock clock, Console console,
             Function<String, List<TimedResource>> provider, BiConsumer<Integer, List<TimedResource>> consumer)

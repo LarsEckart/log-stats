@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
+import javax.inject.Inject;
 
 public class LogFileLineParser implements Function<String, TimedResource> {
 
@@ -20,6 +21,10 @@ public class LogFileLineParser implements Function<String, TimedResource> {
 
     private static final String ACTION_QUERY_PARAM = "action=";
     private static final String QUERY_SEPARATOR = "&";
+
+    @Inject
+    public LogFileLineParser() {
+    }
 
     @Override
     public RequestInfo apply(String text) {
