@@ -4,6 +4,7 @@ import ee.larseckart.logstats.model.TimedResource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -45,9 +47,10 @@ public class AverageDurationCalculatorTest {
         this.averageDurationCalculator.accept(3, timedResources);
 
         // then
-        verify(this.console, times(1)).printLine("B: 10.00 ms");
-        verify(this.console, times(1)).printLine("C: 6.00 ms");
-        verify(this.console, times(1)).printLine("A: 5.00 ms");
+        InOrder inOrder = inOrder(this.console);
+        inOrder.verify(this.console, times(1)).printLine("B: 10.00 ms");
+        inOrder.verify(this.console, times(1)).printLine("C: 6.00 ms");
+        inOrder.verify(this.console, times(1)).printLine("A: 5.00 ms");
         verify(this.console, times(3)).printLine(anyString());
     }
 
