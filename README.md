@@ -1,5 +1,7 @@
 # Log-Stats
 
+[![Build Status](https://travis-ci.org/LarsEckart/log-stats.svg?branch=master)](https://travis-ci.org/LarsEckart/log-stats)
+
 ### How to build & run tests
 
 ```bash
