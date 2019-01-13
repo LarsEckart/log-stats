@@ -1,5 +1,12 @@
 package ee.larseckart.logstats;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
 import ee.larseckart.logstats.model.TimedResource;
 import org.junit.Before;
 import org.junit.Rule;
@@ -8,13 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.time.Clock;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class LogStatsTest {
@@ -37,8 +39,7 @@ public class LogStatsTest {
     @Mock
     private BiConsumer<Integer, List<TimedResource>> consumer;
 
-    @Mock
-    private Clock clock;
+    private Clock clock = Clock.systemDefaultZone();
 
     private LogStats logStats;
 
@@ -201,7 +202,10 @@ public class LogStatsTest {
         anyArgs[0] = ANY_FILE_NAME;
         anyArgs[1] = ANY_POSITIVE_NUMBER;
 
-        given(this.clock.millis()).willReturn(50L, 75L);
+        this.clock = mock(Clock.class);
+        given(this.clock.instant()).willReturn(Instant.ofEpochMilli(50L), Instant.ofEpochMilli(75L));
+
+        this.logStats = new LogStats(this.clock, this.console, this.provider, this.consumer);
 
         // when
         this.logStats.execute(anyArgs);
