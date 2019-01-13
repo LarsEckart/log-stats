@@ -7,8 +7,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
-import javax.inject.Inject;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class LogFileLineParser implements Function<String, TimedResource> {
 
     private static final String LINE_ITEM_SEPARATOR = " ";

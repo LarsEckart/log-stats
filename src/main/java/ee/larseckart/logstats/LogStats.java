@@ -3,10 +3,14 @@ package ee.larseckart.logstats;
 import ee.larseckart.logstats.model.TimedResource;
 
 import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class LogStats {
 
@@ -18,8 +22,8 @@ public class LogStats {
     @Inject
     public LogStats(
             Clock clock, Console console,
-            Function<String, List<TimedResource>> provider, BiConsumer<Integer, List<TimedResource>> consumer)
-    {
+            @Named("logFileInput") Function<String, List<TimedResource>> provider,
+            BiConsumer<Integer, List<TimedResource>> consumer) {
         this.clock = clock;
         this.console = console;
         this.provider = provider;
@@ -27,14 +31,13 @@ public class LogStats {
     }
 
     public void execute(String[] args) {
-        long start = this.clock.millis();
+        Instant start = this.clock.instant();
         if (hasNoArguments(args)) {
             printInfoMessage();
         } else {
             processArguments(args);
         }
-        long duration = this.clock.millis() - start;
-        this.console.printLine("Execution took " + duration + " milliseconds.");
+        this.console.printLine("Execution took " + Duration.between(start, clock.instant()).toMillis() + " milliseconds.");
     }
 
     private boolean hasNoArguments(String[] args) {

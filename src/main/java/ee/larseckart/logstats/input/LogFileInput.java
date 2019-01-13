@@ -10,14 +10,18 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.inject.Inject;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+@Singleton
 public class LogFileInput implements Function<String, List<TimedResource>> {
 
     private final Function<String, TimedResource> logFileLineParser;
 
     @Inject
-    public LogFileInput(Function<String, TimedResource> logFileLineParser) {
+    public LogFileInput(@Named("LogFileLineParser")Function<String, TimedResource> logFileLineParser) {
         this.logFileLineParser = logFileLineParser;
     }
 

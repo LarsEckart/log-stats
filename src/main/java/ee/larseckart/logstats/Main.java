@@ -1,12 +1,13 @@
 package ee.larseckart.logstats;
 
-import ee.larseckart.logstats.di.DaggerMainInjector;
-import ee.larseckart.logstats.di.MainInjector;
+import io.micronaut.context.ApplicationContext;
 
 public class Main {
 
     public static void main(String[] args) {
-        MainInjector injector = DaggerMainInjector.create();
-        injector.logStats().execute(args);
+        try (ApplicationContext context = ApplicationContext.run()) {
+            LogStats myBean = context.getBean(LogStats.class);
+            myBean.execute(args);
+        }
     }
 }
