@@ -1,15 +1,13 @@
 package ee.larseckart.logstats.input;
 
-import ee.larseckart.logstats.model.RequestInfo;
-import ee.larseckart.logstats.model.TimedResource;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import ee.larseckart.logstats.model.RequestInfo;
+import ee.larseckart.logstats.model.TimedResource;
 
 @Singleton
 public class LogFileLineParser implements Function<String, TimedResource> {
@@ -25,7 +23,6 @@ public class LogFileLineParser implements Function<String, TimedResource> {
     private static final String ACTION_QUERY_PARAM = "action=";
     private static final String QUERY_SEPARATOR = "&";
 
-    @Inject
     public LogFileLineParser() {
     }
 

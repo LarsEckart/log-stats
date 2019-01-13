@@ -1,19 +1,17 @@
 package ee.larseckart.logstats;
 
-import ee.larseckart.logstats.model.TimedResource;
-
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
+
+import ee.larseckart.logstats.model.TimedResource;
 
 public class AverageDurationCalculator implements BiConsumer<Integer, List<TimedResource>> {
 
     private final Console console;
 
-    @Inject
     public AverageDurationCalculator(Console console) {
         this.console = console;
     }
@@ -30,18 +28,18 @@ public class AverageDurationCalculator implements BiConsumer<Integer, List<Timed
 
     private Map<String, DoubleSummaryStatistics> aggregateData(List<TimedResource> timedResources) {
         return timedResources.stream()
-                             .collect(Collectors.groupingBy(
-                                     timedResource -> timedResource.getResource(),
-                                     Collectors.summarizingDouble(timedResource -> timedResource.getDuration())));
+                .collect(Collectors.groupingBy(
+                        timedResource -> timedResource.getResource(),
+                        Collectors.summarizingDouble(timedResource -> timedResource.getDuration())));
     }
 
     private List<AggregationResult> prepareSortedResultList(int topN, Map<String, DoubleSummaryStatistics> aggregated) {
         return aggregated.entrySet()
-                         .stream()
-                         .map(entry -> new AggregationResult(entry.getKey(), entry.getValue().getAverage()))
-                         .sorted((s1, s2) -> s2.getValue().compareTo(s1.getValue()))
-                         .limit(topN)
-                         .collect(Collectors.toList());
+                .stream()
+                .map(entry -> new AggregationResult(entry.getKey(), entry.getValue().getAverage()))
+                .sorted((s1, s2) -> s2.getValue().compareTo(s1.getValue()))
+                .limit(topN)
+                .collect(Collectors.toList());
     }
 
     class AggregationResult {

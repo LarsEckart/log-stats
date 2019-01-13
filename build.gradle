@@ -27,8 +27,10 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java:1.0.3" // <2>
+    annotationProcessor "io.micronaut:micronaut-inject-java:1.0.3"
     compile "io.micronaut:micronaut-inject:1.0.3"
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.8.0'

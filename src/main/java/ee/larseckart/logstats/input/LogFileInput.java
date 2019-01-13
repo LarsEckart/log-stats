@@ -1,7 +1,5 @@
 package ee.larseckart.logstats.input;
 
-import ee.larseckart.logstats.model.TimedResource;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -10,18 +8,17 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+
+import ee.larseckart.logstats.model.TimedResource;
 
 @Singleton
 public class LogFileInput implements Function<String, List<TimedResource>> {
 
     private final Function<String, TimedResource> logFileLineParser;
 
-    @Inject
-    public LogFileInput(@Named("LogFileLineParser")Function<String, TimedResource> logFileLineParser) {
+    public LogFileInput(@Named("LogFileLineParser") Function<String, TimedResource> logFileLineParser) {
         this.logFileLineParser = logFileLineParser;
     }
 
