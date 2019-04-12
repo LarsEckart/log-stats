@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 import ee.larseckart.logstats.model.TimedResource;
 
+import javax.inject.Named;
+
+@Named("Calculator")
 public class AverageDurationCalculator implements BiConsumer<Integer, List<TimedResource>> {
 
     private final Console console;

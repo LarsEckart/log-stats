@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import ee.larseckart.logstats.model.TimedResource;
 
+@Singleton
 public class LogStats {
 
     private final Clock clock;
@@ -20,7 +22,7 @@ public class LogStats {
     public LogStats(
             Clock clock, Console console,
             @Named("logFileInput") Function<String, List<TimedResource>> provider,
-            BiConsumer<Integer, List<TimedResource>> consumer) {
+            @Named("Calculator") BiConsumer<Integer, List<TimedResource>> consumer) {
         this.clock = clock;
         this.console = console;
         this.provider = provider;
