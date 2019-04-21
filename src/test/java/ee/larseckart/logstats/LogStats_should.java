@@ -20,7 +20,7 @@ class LogStats_should {
     void setUp() throws Exception {
         out = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(out, true, StandardCharsets.UTF_8.name());
-        logStats = new LogStats(printStream);
+        logStats = new LogStats(new Console(printStream));
     }
 
     @Test
