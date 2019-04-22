@@ -94,17 +94,33 @@ class LogStats_should {
     }
 
     @Test
-    void prints_resource() throws Exception {
+    void prints_resource_and_request_time_when_1_entry_in_file() throws Exception {
         // given
         File tempFile = File.createTempFile("any", ".log");
         var lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
         Files.write(tempFile.toPath(), lines);
-        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "3"};
+        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "1"};
 
         // when
         logStats.run(argumentWithFileAndNumberArgument);
 
         // then
-        assertThat(out.toString()).endsWith("\n/checkSession.do 100");
+        assertThat(out.toString()).endsWith("\n/checkSession.do 100.0");
+    }
+
+    @Test
+    void prints_resource_and_avg_request_time_when_2_entries_in_file() throws Exception {
+        // given
+        File tempFile = File.createTempFile("any", ".log");
+        var lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 200");
+        Files.write(tempFile.toPath(), lines);
+        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "1"};
+
+        // when
+        logStats.run(argumentWithFileAndNumberArgument);
+
+        // then
+        assertThat(out.toString()).endsWith("\n/checkSession.do 150.0");
     }
 }
