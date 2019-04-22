@@ -7,6 +7,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -89,5 +91,20 @@ class LogStats_should {
                 () -> assertThat(out.toString()).startsWith("Processing any"),
                 () -> assertThat(out.toString()).endsWith(".log for top 3 requests\n")
         );
+    }
+
+    @Test
+    void prints_resource() throws Exception {
+        // given
+        File tempFile = File.createTempFile("any", ".log");
+        var lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
+        Files.write(tempFile.toPath(), lines);
+        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "3"};
+
+        // when
+        logStats.run(argumentWithFileAndNumberArgument);
+
+        // then
+        assertThat(out.toString()).endsWith("\n/checkSession.do 100");
     }
 }

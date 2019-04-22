@@ -1,5 +1,9 @@
 package ee.larseckart.logstats;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+
 public class LogStats {
 
     private final Console console;
@@ -31,5 +35,20 @@ public class LogStats {
         }
 
         console.printProcessing(arguments.topN(), arguments.file());
+
+        try (var bufferedReader = Files.newBufferedReader(arguments.file().toPath(), StandardCharsets.UTF_8)) {
+            String line = bufferedReader.readLine();
+            if (line != null) {
+                int index = line.indexOf("]");
+                int startIndex = index + 2;
+                String substring = line.substring(startIndex);
+                String[] splitted = substring.split(" ");
+                String resource = splitted[0];
+                String requestTime = splitted[splitted.length - 1];
+                console.print("\n" + resource + " " + requestTime);
+            }
+        } catch (IOException e) {
+
+        }
     }
 }

@@ -7,6 +7,10 @@ public class Console {
 
     private final PrintStream printStream;
 
+    void print(String any) {
+        this.printStream.print(any);
+    }
+
     public Console(PrintStream printStream) {
         this.printStream = printStream;
     }
