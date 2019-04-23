@@ -2,6 +2,7 @@ package ee.larseckart.logstats;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.time.Duration;
 
 public class Console {
 
@@ -34,5 +35,9 @@ public class Console {
 
     void printProcessing(int topN, File file) {
         printStream.print("Processing " + file.getName() + " for top " + topN + " requests\n");
+    }
+
+    void printProgramExecutionTime(Duration duration) {
+        printStream.print("Execution time: " + duration.toMillis() + "ms");
     }
 }
