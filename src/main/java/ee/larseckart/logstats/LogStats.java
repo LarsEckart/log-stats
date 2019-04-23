@@ -3,6 +3,8 @@ package ee.larseckart.logstats;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,7 +53,11 @@ public class LogStats {
         } catch (IOException e) {
         }
         // TODO: limit
-        map.forEach((key, value) -> console.print("\n" + key + " " + value.avg()));
+        map.entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Comparator.comparingDouble(e -> e.getValue().avg())))
+                .limit(arguments.topN())
+                .forEach((entry) -> console.print("\n" + entry.getKey() + " " + entry.getValue().avg()));
     }
 
     private String[] getRelevantPart(String line, int index) {

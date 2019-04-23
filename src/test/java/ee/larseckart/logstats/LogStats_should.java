@@ -123,4 +123,46 @@ class LogStats_should {
         // then
         assertThat(out.toString()).endsWith("\n/checkSession.do 150.0");
     }
+
+    @Test
+    void prints_resource_and_avg_request_time_ordered_by_avg_request_time() throws Exception {
+        // given
+        File tempFile = File.createTempFile("any", ".log");
+        var lines = List.of(
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] getBroadbandSubscriptions in 500",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] getBroadbandSubscriptions in 500",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] getBroadbandSubscriptions in 500");
+        Files.write(tempFile.toPath(), lines);
+        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "2"};
+
+        // when
+        logStats.run(argumentWithFileAndNumberArgument);
+
+        // then
+        assertThat(out.toString()).endsWith("\ngetBroadbandSubscriptions 500.0\n/checkSession.do 100.0");
+    }
+
+    @Test
+    void prints_resource_and_avg_request_time_ordered_by_avg_request_time_and_adheres_to_provided_limit() throws Exception {
+        // given
+        File tempFile = File.createTempFile("any", ".log");
+        var lines = List.of(
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] getBroadbandSubscriptions in 500",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] getBroadbandSubscriptions in 500",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] getBroadbandSubscriptions in 500");
+        Files.write(tempFile.toPath(), lines);
+        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "1"};
+
+        // when
+        logStats.run(argumentWithFileAndNumberArgument);
+
+        // then
+        assertThat(out.toString()).endsWith("\ngetBroadbandSubscriptions 500.0");
+    }
 }
