@@ -165,4 +165,23 @@ class LogStats_should {
         // then
         assertThat(out.toString()).endsWith("\ngetBroadbandSubscriptions 500.0");
     }
+
+    @Test
+    void ignores_input_lines_that_do_not_have_valid_request_time() throws Exception {
+        // given
+        File tempFile = File.createTempFile("any", ".log");
+        var lines = List.of(
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
+                "2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
+        Files.write(tempFile.toPath(), lines);
+        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "1"};
+
+        // when
+        logStats.run(argumentWithFileAndNumberArgument);
+
+        // then
+        assertThat(out.toString()).endsWith("\n/checkSession.do 100.0");
+    }
 }

@@ -47,8 +47,13 @@ public class LogStats {
                 int index = line.indexOf("]");
                 String[] splitted = getRelevantPart(line, index);
                 String resource = splitted[0];
-                int requestTime = Integer.parseInt(splitted[splitted.length - 1]);
-                map.merge(resource, new Resource(requestTime), (prev, cur) -> prev.add(new Resource(requestTime)));
+                try {
+                    int requestTime;
+                    requestTime = Integer.parseInt(splitted[splitted.length - 1]);
+                    map.merge(resource, new Resource(requestTime), (prev, cur) -> prev.add(new Resource(requestTime)));
+                } catch (NumberFormatException e) {
+
+                }
             }
         } catch (IOException e) {
         }
