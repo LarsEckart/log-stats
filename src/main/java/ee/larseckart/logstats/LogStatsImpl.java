@@ -46,17 +46,20 @@ public class LogStatsImpl implements LogStats {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 int index = line.indexOf("]");
-                String[] splitted = getRelevantPart(line, index);
+                int startIndex = index + 2;
+                String substring = line.substring(startIndex);
+                String[] splitted = substring.split(" ");
                 String resource = splitted[0];
                 try {
                     int requestTime;
                     requestTime = Integer.parseInt(splitted[splitted.length - 1]);
                     map.merge(resource, new Resource(requestTime), (prev, cur) -> prev.add(new Resource(requestTime)));
                 } catch (NumberFormatException e) {
-
+                    console.printBadLine(line);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException exception) {
+            console.printStackTrace(exception);
         }
         map.entrySet()
                 .stream()
@@ -64,11 +67,5 @@ public class LogStatsImpl implements LogStats {
                 .limit(arguments.topN())
                 .forEach((entry) -> console.print("\n" + entry.getKey() + " " + entry.getValue().avg()));
         System.out.println();
-    }
-
-    private String[] getRelevantPart(String line, int index) {
-        int startIndex = index + 2;
-        String substring = line.substring(startIndex);
-        return substring.split(" ");
     }
 }

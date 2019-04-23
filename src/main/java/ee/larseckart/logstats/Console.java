@@ -40,4 +40,12 @@ public class Console {
     void printProgramExecutionTime(Duration duration) {
         printStream.print("Execution time: " + duration.toMillis() + "ms");
     }
+
+    void printBadLine(String line) {
+        printStream.print("Invalid line: " + line);
+    }
+
+    void printStackTrace(Exception exception) {
+        exception.printStackTrace(printStream);
+    }
 }

@@ -184,4 +184,21 @@ class LogStats_should {
         // then
         assertThat(out.toString()).endsWith("\n/checkSession.do 100.0");
     }
+
+    @Test
+    void print_info_about_bad_entries() throws Exception {
+        // given
+        File tempFile = File.createTempFile("any", ".log");
+        var lines = List.of(
+                "2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}");
+        Files.write(tempFile.toPath(), lines);
+        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "1"};
+
+        // when
+        logStats.run(argumentWithFileAndNumberArgument);
+
+        // then
+        assertThat(out.toString()).contains(
+                "\nInvalid line: 2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}");
+    }
 }
