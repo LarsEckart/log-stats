@@ -10,14 +10,10 @@ public class Resource {
         this.invocations = 1;
     }
 
-    public Resource(int requestTotalSum, int invocations) {
-        this.requestTotalSum = requestTotalSum;
-        this.invocations = invocations;
-    }
-
     public Resource add(Resource resource) {
-        return new Resource(this.requestTotalSum + resource.requestTotalSum,
-                invocations + resource.invocations);
+        this.invocations += resource.invocations;
+        this.requestTotalSum += resource.requestTotalSum;
+        return this;
     }
 
     public double avg() {
