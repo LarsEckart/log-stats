@@ -22,7 +22,8 @@ class LogStats_should {
     void setUp() throws Exception {
         out = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(out, true, StandardCharsets.UTF_8.name());
-        logStats = new LogStatsImpl(new Console(printStream));
+        Console console = new Console(printStream);
+        logStats = new LogStatsImpl(console, new AverageRequestTime(console));
     }
 
     @Test

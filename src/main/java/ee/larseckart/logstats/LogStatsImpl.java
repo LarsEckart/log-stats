@@ -7,9 +7,11 @@ import java.nio.file.Files;
 public class LogStatsImpl implements LogStats {
 
     private final Console console;
+    private final AverageRequestTime averageRequestTime;
 
-    public LogStatsImpl(Console console) {
+    public LogStatsImpl(Console console, AverageRequestTime averageRequestTime) {
         this.console = console;
+        this.averageRequestTime = averageRequestTime;
     }
 
     @Override
@@ -37,7 +39,6 @@ public class LogStatsImpl implements LogStats {
 
         console.printProcessing(arguments.topN(), arguments.file());
 
-        AverageRequestTime averageRequestTime = new AverageRequestTime(console);
         try (var bufferedReader = Files.newBufferedReader(arguments.file().toPath(), StandardCharsets.UTF_8)) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
