@@ -3,10 +3,6 @@ package ee.larseckart.logstats;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class LogStatsImpl implements LogStats {
 
@@ -41,31 +37,16 @@ public class LogStatsImpl implements LogStats {
 
         console.printProcessing(arguments.topN(), arguments.file());
 
-        Map<String, Resource> map = new LinkedHashMap<>();
+        AverageRequestTime averageRequestTime = new AverageRequestTime(console);
         try (var bufferedReader = Files.newBufferedReader(arguments.file().toPath(), StandardCharsets.UTF_8)) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                int index = line.indexOf("]");
-                int startIndex = index + 2;
-                String substring = line.substring(startIndex);
-                String[] splitted = substring.split(" ");
-                String resource = splitted[0];
-                try {
-                    int requestTime;
-                    requestTime = Integer.parseInt(splitted[splitted.length - 1]);
-                    map.merge(resource, new Resource(requestTime), (prev, cur) -> prev.add(new Resource(requestTime)));
-                } catch (NumberFormatException e) {
-                    console.printBadLine(line);
-                }
+                averageRequestTime.process(line);
             }
         } catch (IOException exception) {
             console.printStackTrace(exception);
         }
-        map.entrySet()
-                .stream()
-                .sorted(Collections.reverseOrder(Comparator.comparingDouble(e -> e.getValue().avg())))
-                .limit(arguments.topN())
-                .forEach((entry) -> console.print("\n" + entry.getKey() + " " + entry.getValue().avg()));
+        averageRequestTime.print(arguments.topN());
         System.out.println();
     }
 }
