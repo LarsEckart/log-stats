@@ -41,7 +41,12 @@ public class Histogram implements FileContentProcessor {
 
     @Override
     public void print(int limit) {
-        this.hours.forEach((k, v) -> console.print(k + ": " + (v.val != 0 ? "#" : "") + "\n"));
+        this.hours.forEach((k, v) -> console.print(k + ": " + getSymbol(v) + "\n"));
+    }
+
+    private String getSymbol(MutableInteger v) {
+        return "#".repeat(Math.max(0, v.val));
+
     }
 
     static class MutableInteger {
