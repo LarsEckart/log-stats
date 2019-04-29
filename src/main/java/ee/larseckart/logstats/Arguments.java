@@ -1,6 +1,6 @@
 package ee.larseckart.logstats;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 class Arguments {
@@ -39,9 +39,9 @@ class Arguments {
         return Integer.parseInt(parameters[1]);
     }
 
-    File file() {
+    Path file() {
         var path = Paths.get(parameters[0]);
 
-        return path.toFile();
+        return path;
     }
 }

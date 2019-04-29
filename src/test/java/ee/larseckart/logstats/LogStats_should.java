@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -79,22 +78,6 @@ class LogStats_should {
         assertAll(
                 () -> assertThat(out.toString()).startsWith("Illegal argument, no file at "),
                 () -> assertThat(out.toString()).endsWith("any_file_path.\n")
-        );
-    }
-
-    @Test
-    void prints_message_about_processing_data_when_first_argument_is_valid_file_path_and_second_argument_is_number() throws Exception {
-        // given
-        File tempFile = File.createTempFile("any", ".log");
-        String[] argumentWithFileAndNumberArgument = {tempFile.getAbsolutePath(), "3"};
-
-        // when
-        logStats.run(argumentWithFileAndNumberArgument);
-
-        // then
-        assertAll(
-                () -> assertThat(out.toString()).startsWith("Processing any"),
-                () -> assertThat(out.toString()).endsWith(".log for top 3 requests\n")
         );
     }
 
@@ -216,7 +199,7 @@ class LogStats_should {
 
             // then
             assertThat(out.toString()).contains(
-                    "\nInvalid line: 2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}");
+                    "Invalid line: 2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}");
         }
     }
 }

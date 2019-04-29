@@ -37,9 +37,7 @@ public class LogStatsImpl implements LogStats {
             return;
         }
 
-        console.printProcessing(arguments.topN(), arguments.file());
-
-        try (var bufferedReader = Files.newBufferedReader(arguments.file().toPath(), StandardCharsets.UTF_8)) {
+        try (var bufferedReader = Files.newBufferedReader(arguments.file(), StandardCharsets.UTF_8)) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 averageRequestTime.process(line);

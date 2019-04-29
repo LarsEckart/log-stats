@@ -1,7 +1,7 @@
 package ee.larseckart.logstats;
 
-import java.io.File;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.time.Duration;
 
 public class Console {
@@ -29,12 +29,8 @@ public class Console {
         printStream.print("Illegal argument, second argument must be a number.\n");
     }
 
-    void printFileError(File f) {
-        printStream.print("Illegal argument, no file at " + f.getAbsolutePath() + ".\n");
-    }
-
-    void printProcessing(int topN, File file) {
-        printStream.print("Processing " + file.getName() + " for top " + topN + " requests\n");
+    void printFileError(Path path) {
+        printStream.print("Illegal argument, no file at " + path + ".\n");
     }
 
     void printProgramExecutionTime(Duration duration) {
