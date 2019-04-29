@@ -202,4 +202,55 @@ class LogStats_should {
                     "Invalid line: 2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}");
         }
     }
+
+    @Nested
+    class Histogram_should {
+
+        @BeforeEach
+        void setUp() throws UnsupportedEncodingException {
+            out = new ByteArrayOutputStream();
+            PrintStream printStream = new PrintStream(out, true, StandardCharsets.UTF_8.name());
+            Console console = new Console(printStream);
+            logStats = new LogStatsImpl(console, new Histogram(console));
+        }
+
+        @Test
+        void print_histogram_for_one_entry(@TempDir Path tempDir) throws Exception {
+            // given
+            var tempFile = tempDir.resolve("any_log_file.log");
+            var lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
+            Files.write(tempFile, lines);
+            String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
+
+            // when
+            logStats.run(argumentWithFileAndNumberArgument);
+
+            // then
+            assertThat(out.toString()).isEqualTo("00: #\n"
+                    + "01: \n"
+                    + "02: \n"
+                    + "03: \n"
+                    + "04: \n"
+                    + "05: \n"
+                    + "06: \n"
+                    + "07: \n"
+                    + "08: \n"
+                    + "09: \n"
+                    + "10: \n"
+                    + "11: \n"
+                    + "12: \n"
+                    + "13: \n"
+                    + "14: \n"
+                    + "15: \n"
+                    + "16: \n"
+                    + "17: \n"
+                    + "18: \n"
+                    + "19: \n"
+                    + "20: \n"
+                    + "21: \n"
+                    + "22: \n"
+                    + "23: \n"
+                    + "24: \n");
+        }
+    }
 }

@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class AverageRequestTime {
+public class AverageRequestTime implements FileContentProcessor {
 
     private Console console;
     private Map<String, Resource> map;
@@ -15,6 +15,7 @@ public class AverageRequestTime {
         this.map = new LinkedHashMap<>();
     }
 
+    @Override
     public void process(String line) {
         int index = line.indexOf("]");
         int startIndex = index + 2;
@@ -30,6 +31,7 @@ public class AverageRequestTime {
         }
     }
 
+    @Override
     public void print(int limit) {
         map.entrySet()
                 .stream()

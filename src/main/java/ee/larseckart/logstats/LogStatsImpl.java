@@ -7,11 +7,11 @@ import java.nio.file.Files;
 public class LogStatsImpl implements LogStats {
 
     private final Console console;
-    private final AverageRequestTime averageRequestTime;
+    private final FileContentProcessor fileContentProcessor;
 
-    public LogStatsImpl(Console console, AverageRequestTime averageRequestTime) {
+    public LogStatsImpl(Console console, FileContentProcessor fileContentProcessor) {
         this.console = console;
-        this.averageRequestTime = averageRequestTime;
+        this.fileContentProcessor = fileContentProcessor;
     }
 
     @Override
@@ -40,12 +40,12 @@ public class LogStatsImpl implements LogStats {
         try (var bufferedReader = Files.newBufferedReader(arguments.file(), StandardCharsets.UTF_8)) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                averageRequestTime.process(line);
+                fileContentProcessor.process(line);
             }
         } catch (IOException exception) {
             console.printStackTrace(exception);
         }
-        averageRequestTime.print(arguments.topN());
+        fileContentProcessor.print(arguments.topN());
         System.out.println();
     }
 }
