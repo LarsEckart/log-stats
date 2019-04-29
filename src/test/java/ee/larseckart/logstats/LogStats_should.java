@@ -218,7 +218,7 @@ class LogStats_should {
         void print_histogram_for_one_entry(@TempDir Path tempDir) throws Exception {
             // given
             var tempFile = tempDir.resolve("any_log_file.log");
-            var lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
+            var lines = List.of("2015-08-19 18:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
             Files.write(tempFile, lines);
             String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
 
@@ -226,7 +226,7 @@ class LogStats_should {
             logStats.run(argumentWithFileAndNumberArgument);
 
             // then
-            assertThat(out.toString()).isEqualTo("00: #\n"
+            assertThat(out.toString()).isEqualTo("00: \n"
                     + "01: \n"
                     + "02: \n"
                     + "03: \n"
@@ -244,13 +244,12 @@ class LogStats_should {
                     + "15: \n"
                     + "16: \n"
                     + "17: \n"
-                    + "18: \n"
+                    + "18: #\n"
                     + "19: \n"
                     + "20: \n"
                     + "21: \n"
                     + "22: \n"
-                    + "23: \n"
-                    + "24: \n");
+                    + "23: \n");
         }
     }
 }
