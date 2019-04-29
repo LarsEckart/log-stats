@@ -1,5 +1,7 @@
 package ee.larseckart.logstats;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -41,11 +43,24 @@ public class Histogram implements FileContentProcessor {
 
     @Override
     public void print(int limit) {
-        this.hours.forEach((k, v) -> console.print(k + ": " + getSymbol(v) + "\n"));
+        // untested
+        Comparator<MutableInteger> comparator = Comparator.comparing(MutableInteger::get);
+        int max = Collections.max(hours.values(), comparator).get();
+        int divisor = 1;
+        while (max / divisor > 80) {
+            divisor *= 10;
+        }
+        final int div = divisor;
+        // untested
+
+        this.hours.forEach((k, v) -> {
+            int i = v.val / div;
+            console.print(k + ": " + getSymbol(i) + "\n");
+        });
     }
 
-    private String getSymbol(MutableInteger v) {
-        return "#".repeat(Math.max(0, v.val));
+    private String getSymbol(int i) {
+        return "#".repeat(Math.max(0, i));
 
     }
 

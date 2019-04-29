@@ -253,7 +253,7 @@ class LogStats_should {
         }
 
         @Test
-        void print_histogram_for_two_entry(@TempDir Path tempDir) throws Exception {
+        void print_histogram_for_two_entries_in_same_hour(@TempDir Path tempDir) throws Exception {
             // given
             var tempFile = tempDir.resolve("any_log_file.log");
             var lines = List.of("2015-08-19 18:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100",
