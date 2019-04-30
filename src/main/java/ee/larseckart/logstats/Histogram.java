@@ -45,17 +45,15 @@ public class Histogram implements FileContentProcessor {
     public void print(int limit) {
         // untested
         Comparator<MutableInteger> comparator = Comparator.comparing(MutableInteger::get);
-        int max = Collections.max(hours.values(), comparator).get();
-        int divisor = 1;
-        while (max / divisor > 80) {
-            divisor *= 10;
-        }
-        final int div = divisor;
+        int maxOccurrences = Collections.max(hours.values(), comparator).get();
+        int maxBarLength = 80;
+        int scaleFactor = maxOccurrences / maxBarLength;
+        int s = scaleFactor >= 1 ? scaleFactor : 1;
         // untested
 
         this.hours.forEach((k, v) -> {
-            int i = v.val / div;
-            console.print(k + ": " + getSymbol(i) + "\n");
+            int scaledDownOccurrences = v.val / s;
+            console.print(k + ": " + getSymbol(scaledDownOccurrences) + "\n");
         });
     }
 
