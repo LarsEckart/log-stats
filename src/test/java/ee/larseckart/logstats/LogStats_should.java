@@ -15,6 +15,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class LogStats_should {
 
@@ -199,7 +201,7 @@ class LogStats_should {
 
             // then
             assertThat(out.toString()).contains(
-                    "Invalid line: 2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}");
+                    "Invalid line: 2016-01-19 20:27:08,928 (http--0.0.0.0-28080-16) [USER:358405537695] /mainContent.do?action=CAROUSEL in {}\n");
         }
     }
 
@@ -289,6 +291,39 @@ class LogStats_should {
                     + "21: \n"
                     + "22: \n"
                     + "23: \n");
+        }
+    }
+
+    @Nested
+    class Multiple_File_processors_should {
+
+        private FileContentProcessor first;
+        private FileContentProcessor second;
+
+        @BeforeEach
+        void setUp() {
+            Console console = mock(Console.class);
+            first = mock(FileContentProcessor.class);
+            second = mock(FileContentProcessor.class);
+            List<FileContentProcessor> processors = List.of(first, second);
+            logStats = new LogStatsImpl(console, processors);
+        }
+
+        @Test
+        void all_be_called(@TempDir Path tempDir) throws Exception {
+            // given
+            var tempFile = tempDir.resolve("any_log_file.log");
+            var lines = List.of(
+                    "any line");
+            Files.write(tempFile, lines);
+            String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
+
+            // when
+            logStats.run(argumentWithFileAndNumberArgument);
+
+            // then
+            verify(first).process("any line");
+            verify(second).process("any line");
         }
     }
 }

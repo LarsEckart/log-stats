@@ -38,7 +38,7 @@ public class Console {
     }
 
     void printBadLine(String line) {
-        printStream.print("Invalid line: " + line);
+        printStream.print("Invalid line: " + line + "\n");
     }
 
     void printStackTrace(Exception exception) {
