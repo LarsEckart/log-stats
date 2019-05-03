@@ -33,11 +33,11 @@ public class Histogram implements FileContentProcessor {
     }
 
     private void updateOccurrences(String hour) {
-        MutableInteger initValue = new MutableInteger(1);
-        MutableInteger oldValue = hours.put(hour, initValue);
-
-        if (oldValue != null) {
-            initValue.set(oldValue.get() + 1);
+        MutableInteger value = hours.get(hour);
+        if (value != null) {
+            value.set(value.get() + 1);
+        } else {
+            hours.put(hour, new MutableInteger(1));
         }
     }
 
@@ -59,7 +59,6 @@ public class Histogram implements FileContentProcessor {
 
     private String getSymbol(int i) {
         return "#".repeat(Math.max(0, i));
-
     }
 
     static class MutableInteger {
