@@ -20,12 +20,8 @@ class Arguments {
     }
 
     boolean isTopNArgumentProvided() {
-        try {
-            Integer.parseInt(parameters[1]);
-            return true;
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            return false;
-        }
+        String parameter = parameters[1];
+        return parameter.chars().allMatch(Character::isDigit);
     }
 
     boolean isFileArgumentProvided() {
