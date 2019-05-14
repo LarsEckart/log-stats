@@ -55,6 +55,9 @@ public class LogStatsImpl implements LogStats {
         }
         for (FileContentProcessor processor : processors) {
             processor.print(arguments.topN());
+            if (processors.size() > 1.) {
+                console.print("\n");
+            }
         }
         System.out.println();
     }

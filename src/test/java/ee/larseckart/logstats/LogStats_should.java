@@ -15,7 +15,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class LogStats_should {
@@ -299,10 +301,11 @@ class LogStats_should {
 
         private FileContentProcessor first;
         private FileContentProcessor second;
+        private Console console;
 
         @BeforeEach
         void setUp() {
-            Console console = mock(Console.class);
+            console = mock(Console.class);
             first = mock(FileContentProcessor.class);
             second = mock(FileContentProcessor.class);
             List<FileContentProcessor> processors = List.of(first, second);
@@ -313,8 +316,7 @@ class LogStats_should {
         void all_be_called(@TempDir Path tempDir) throws Exception {
             // given
             var tempFile = tempDir.resolve("any_log_file.log");
-            var lines = List.of(
-                    "any line");
+            var lines = List.of("any line");
             Files.write(tempFile, lines);
             String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
 
@@ -324,6 +326,21 @@ class LogStats_should {
             // then
             verify(first).process("any line");
             verify(second).process("any line");
+        }
+
+        @Test
+        void printed_new_line_after_each_content_processors_result(@TempDir Path tempDir) throws Exception {
+            // given
+            var tempFile = tempDir.resolve("any_log_file.log");
+            var lines = List.of("any line");
+            Files.write(tempFile, lines);
+            String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
+
+            // when
+            logStats.run(argumentWithFileAndNumberArgument);
+
+            // then
+            verify(console, times(2)).print(eq("\n"));
         }
     }
 }
