@@ -1,6 +1,8 @@
 package ee.larseckart.logstats;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -20,6 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class LogStats_should {
 
     private ByteArrayOutputStream out;
@@ -97,7 +100,7 @@ class LogStats_should {
         }
 
         @Test
-        void prints_resource_and_request_time_when_1_entry_in_file(@TempDir Path tempDir) throws Exception {
+        void prints_resource_and_request_time_when_1_resource_entry_in_file(@TempDir Path tempDir) throws Exception {
             // given
             var tempFile = tempDir.resolve("any_log_file.log");
             var lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
@@ -109,6 +112,72 @@ class LogStats_should {
 
             // then
             assertThat(out.toString()).endsWith("\n/checkSession.do 100.0");
+        }
+
+        @Test
+        void prints_resource_and_request_time_when_1_uri_entry_with_action_in_file(@TempDir Path tempDir) throws Exception {
+            // given
+            var tempFile = tempDir.resolve("any_log_file.log");
+            var lines =
+                    List.of("2015-08-19 00:06:34,448 (http--0.0.0.0-28080-370) [CUST:CUS99P9988] /mainContent.do?action=CAROUSEL&contentId=main_carousel in 100");
+            Files.write(tempFile, lines);
+            String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
+
+            // when
+            logStats.run(argumentWithFileAndNumberArgument);
+
+            // then
+            assertThat(out.toString()).endsWith("\n/mainContent.do?action=CAROUSEL 100.0");
+        }
+
+        @Test
+        void prints_resource_and_request_time_when_1_uri_entry_without_action_in_file(@TempDir Path tempDir) throws Exception {
+            // given
+            var tempFile = tempDir.resolve("any_log_file.log");
+            var lines =
+                    List.of("2015-12-23 13:17:49,056 (http--0.0.0.0-28080-4) [CUST:1011156780] /downloadPdf.do?messageId=3718793&file=ts_confirmation_1449809063332.pdf in 100");
+            Files.write(tempFile, lines);
+            String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
+
+            // when
+            logStats.run(argumentWithFileAndNumberArgument);
+
+            // then
+            assertThat(out.toString()).endsWith("\n/downloadPdf.do 100.0");
+        }
+
+        @Test
+        void prints_resource_and_request_time_when_1_uri_entry_with_only_action_query_param_in_file(@TempDir Path tempDir)
+                throws Exception {
+            // given
+            var tempFile = tempDir.resolve("any_log_file.log");
+            var lines =
+                    List.of("2015-12-21 19:21:13,499 (http--0.0.0.0-28080-28) [ASP CUST:1013233009] /customerCare.do?action=CHANGE_SNI_HEADER in 100");
+            Files.write(tempFile, lines);
+            String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
+
+            // when
+            logStats.run(argumentWithFileAndNumberArgument);
+
+            // then
+            assertThat(out.toString()).endsWith("\n/customerCare.do?action=CHANGE_SNI_HEADER 100.0");
+        }
+
+        @Test
+        void prints_resource_and_request_time_when_1_uri_entry_with_action_query_param_not_at_beginning_in_file(@TempDir Path tempDir)
+                throws Exception {
+            // given
+            var tempFile = tempDir.resolve("any_log_file.log");
+            var lines =
+                    List.of("2016-01-08 14:14:45,820 (http--0.0.0.0-28080-330) [ASP CUST:1000825475] /customerCare.do?bpn=1018704151&ccCode=null&page=mainContent.do?action=SAFE_AVENUE_DETAILS in 100");
+            Files.write(tempFile, lines);
+            String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
+
+            // when
+            logStats.run(argumentWithFileAndNumberArgument);
+
+            // then
+            assertThat(out.toString()).endsWith("\n/customerCare.do?action=SAFE_AVENUE_DETAILS 100.0");
         }
 
         @Test
