@@ -24,6 +24,10 @@ dependencies {
 
     testImplementation 'org.assertj:assertj-core:3.12.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:2.27.0'
+
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile group: 'org.knowm.xchart', name: 'xchart', version: '3.5.4'
 }
 
 tasks.withType(JavaCompile) {

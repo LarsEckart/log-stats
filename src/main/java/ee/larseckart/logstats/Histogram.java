@@ -48,7 +48,7 @@ public class Histogram implements FileContentProcessor {
         int maxOccurrences = Collections.max(hours.values(), comparator).get();
         int maxBarLength = 80;
         int scaleFactor = maxOccurrences / maxBarLength;
-        int s = scaleFactor >= 1 ? scaleFactor : 1;
+        int s = Math.max(scaleFactor, 1);
         // untested
 
         this.hours.forEach((k, v) -> {

@@ -1,12 +1,5 @@
 package ee.larseckart.logstats;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +7,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -102,8 +102,8 @@ class LogStats_should {
         @Test
         void prints_resource_and_request_time_when_1_resource_entry_in_file(@TempDir Path tempDir) throws Exception {
             // given
-            var tempFile = tempDir.resolve("any_log_file.log");
-            var lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
+            Path tempFile = tempDir.resolve("any_log_file.log");
+            List<String> lines = List.of("2015-08-19 00:00:01,049 (http--0.0.0.0-28080-405) [] /checkSession.do in 100");
             Files.write(tempFile, lines);
             String[] argumentWithFileAndNumberArgument = {tempFile.toString(), "1"};
 

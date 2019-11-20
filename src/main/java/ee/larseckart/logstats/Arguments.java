@@ -28,7 +28,7 @@ class Arguments {
         var path = Paths.get(parameters[0]);
         var file = path.toFile();
 
-        return file.exists() && file.isFile();
+        return file.exists() && file.isFile() && file.canRead();
     }
 
     int topN() {
