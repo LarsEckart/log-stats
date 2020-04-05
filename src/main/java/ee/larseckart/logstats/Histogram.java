@@ -16,14 +16,14 @@ public class Histogram implements FileContentProcessor {
     public Histogram(Console console) {
         this.console = console;
         this.hours = IntStream.range(0, 24)
-                .mapToObj(i -> String.format("%02d", i))
-                .collect(Collectors.toMap(
-                        Function.identity(),
-                        v -> new MutableInteger(0),
-                        (u, v) -> {
-                            throw new IllegalStateException(String.format("Duplicate key %s", u));
-                        },
-                        LinkedHashMap::new));
+            .mapToObj(i -> String.format("%02d", i))
+            .collect(Collectors.toMap(
+                Function.identity(),
+                v -> new MutableInteger(0),
+                (u, v) -> {
+                    throw new IllegalStateException(String.format("Duplicate key %s", u));
+                },
+                LinkedHashMap::new));
     }
 
     @Override

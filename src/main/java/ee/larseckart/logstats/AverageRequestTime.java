@@ -52,9 +52,9 @@ public class AverageRequestTime implements FileContentProcessor {
     @Override
     public void print(int limit) {
         map.entrySet()
-                .stream()
-                .sorted(Collections.reverseOrder(Comparator.comparingDouble(e -> e.getValue().avg())))
-                .limit(limit)
-                .forEach((entry) -> console.print("\n" + entry.getKey() + " " + entry.getValue().avg()));
+            .stream()
+            .sorted(Collections.reverseOrder(Comparator.comparingDouble(e -> e.getValue().avg())))
+            .limit(limit)
+            .forEach((entry) -> console.print("\n" + entry.getKey() + " " + entry.getValue().avg()));
     }
 }

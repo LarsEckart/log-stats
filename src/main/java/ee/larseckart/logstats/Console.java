@@ -22,7 +22,7 @@ public class Console {
 
     void printHelp() {
         printStream.print(
-                "Usage: 2 arguments required, filename to parse and number of entries to display.\nFor example: ~/Documents/timing.log 3\n");
+            "Usage: 2 arguments required, filename to parse and number of entries to display.\nFor example: ~/Documents/timing.log 3\n");
     }
 
     void printNaN() {

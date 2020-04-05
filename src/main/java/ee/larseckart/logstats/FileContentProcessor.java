@@ -2,7 +2,7 @@ package ee.larseckart.logstats;
 
 public interface FileContentProcessor {
 
-    void process(String line);
+  void process(String line);
 
-    void print(int limit);
+  void print(int limit);
 }
