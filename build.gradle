@@ -35,7 +35,9 @@ tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
 }
 
-mainClassName = 'ee.larseckart.logstats.Main'
+application {
+    mainClass = 'ee.larseckart.logstats.Main'
+}
 
 jar {
     manifest {
